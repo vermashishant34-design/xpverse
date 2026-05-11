@@ -9,30 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as CharacterRouteImport } from './routes/character'
-import { Route as AppRouteImport } from './routes/_app'
+import { Route as WorkRouteImport } from './routes/work'
+import { Route as StudioRouteImport } from './routes/studio'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppSkillsRouteImport } from './routes/_app.skills'
-import { Route as AppSettingsRouteImport } from './routes/_app.settings'
-import { Route as AppQuestsRouteImport } from './routes/_app.quests'
-import { Route as AppProfileRouteImport } from './routes/_app.profile'
-import { Route as AppPomodoroRouteImport } from './routes/_app.pomodoro'
-import { Route as AppLeaderboardRouteImport } from './routes/_app.leaderboard'
-import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const WorkRoute = WorkRouteImport.update({
+  id: '/work',
+  path: '/work',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CharacterRoute = CharacterRouteImport.update({
-  id: '/character',
-  path: '/character',
+const StudioRoute = StudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppRoute = AppRouteImport.update({
-  id: '/_app',
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -40,148 +34,62 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppSkillsRoute = AppSkillsRouteImport.update({
-  id: '/skills',
-  path: '/skills',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppSettingsRoute = AppSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppQuestsRoute = AppQuestsRouteImport.update({
-  id: '/quests',
-  path: '/quests',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppProfileRoute = AppProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppPomodoroRoute = AppPomodoroRouteImport.update({
-  id: '/pomodoro',
-  path: '/pomodoro',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppLeaderboardRoute = AppLeaderboardRouteImport.update({
-  id: '/leaderboard',
-  path: '/leaderboard',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppDashboardRoute = AppDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AppRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/character': typeof CharacterRoute
-  '/login': typeof LoginRoute
-  '/dashboard': typeof AppDashboardRoute
-  '/leaderboard': typeof AppLeaderboardRoute
-  '/pomodoro': typeof AppPomodoroRoute
-  '/profile': typeof AppProfileRoute
-  '/quests': typeof AppQuestsRoute
-  '/settings': typeof AppSettingsRoute
-  '/skills': typeof AppSkillsRoute
+  '/contact': typeof ContactRoute
+  '/studio': typeof StudioRoute
+  '/work': typeof WorkRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/character': typeof CharacterRoute
-  '/login': typeof LoginRoute
-  '/dashboard': typeof AppDashboardRoute
-  '/leaderboard': typeof AppLeaderboardRoute
-  '/pomodoro': typeof AppPomodoroRoute
-  '/profile': typeof AppProfileRoute
-  '/quests': typeof AppQuestsRoute
-  '/settings': typeof AppSettingsRoute
-  '/skills': typeof AppSkillsRoute
+  '/contact': typeof ContactRoute
+  '/studio': typeof StudioRoute
+  '/work': typeof WorkRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_app': typeof AppRouteWithChildren
-  '/character': typeof CharacterRoute
-  '/login': typeof LoginRoute
-  '/_app/dashboard': typeof AppDashboardRoute
-  '/_app/leaderboard': typeof AppLeaderboardRoute
-  '/_app/pomodoro': typeof AppPomodoroRoute
-  '/_app/profile': typeof AppProfileRoute
-  '/_app/quests': typeof AppQuestsRoute
-  '/_app/settings': typeof AppSettingsRoute
-  '/_app/skills': typeof AppSkillsRoute
+  '/contact': typeof ContactRoute
+  '/studio': typeof StudioRoute
+  '/work': typeof WorkRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/character'
-    | '/login'
-    | '/dashboard'
-    | '/leaderboard'
-    | '/pomodoro'
-    | '/profile'
-    | '/quests'
-    | '/settings'
-    | '/skills'
+  fullPaths: '/' | '/contact' | '/studio' | '/work'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/character'
-    | '/login'
-    | '/dashboard'
-    | '/leaderboard'
-    | '/pomodoro'
-    | '/profile'
-    | '/quests'
-    | '/settings'
-    | '/skills'
-  id:
-    | '__root__'
-    | '/'
-    | '/_app'
-    | '/character'
-    | '/login'
-    | '/_app/dashboard'
-    | '/_app/leaderboard'
-    | '/_app/pomodoro'
-    | '/_app/profile'
-    | '/_app/quests'
-    | '/_app/settings'
-    | '/_app/skills'
+  to: '/' | '/contact' | '/studio' | '/work'
+  id: '__root__' | '/' | '/contact' | '/studio' | '/work'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppRoute: typeof AppRouteWithChildren
-  CharacterRoute: typeof CharacterRoute
-  LoginRoute: typeof LoginRoute
+  ContactRoute: typeof ContactRoute
+  StudioRoute: typeof StudioRoute
+  WorkRoute: typeof WorkRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/work': {
+      id: '/work'
+      path: '/work'
+      fullPath: '/work'
+      preLoaderRoute: typeof WorkRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/character': {
-      id: '/character'
-      path: '/character'
-      fullPath: '/character'
-      preLoaderRoute: typeof CharacterRouteImport
+    '/studio': {
+      id: '/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof StudioRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app': {
-      id: '/_app'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AppRouteImport
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -191,85 +99,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/skills': {
-      id: '/_app/skills'
-      path: '/skills'
-      fullPath: '/skills'
-      preLoaderRoute: typeof AppSkillsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/settings': {
-      id: '/_app/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AppSettingsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/quests': {
-      id: '/_app/quests'
-      path: '/quests'
-      fullPath: '/quests'
-      preLoaderRoute: typeof AppQuestsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/profile': {
-      id: '/_app/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AppProfileRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/pomodoro': {
-      id: '/_app/pomodoro'
-      path: '/pomodoro'
-      fullPath: '/pomodoro'
-      preLoaderRoute: typeof AppPomodoroRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/leaderboard': {
-      id: '/_app/leaderboard'
-      path: '/leaderboard'
-      fullPath: '/leaderboard'
-      preLoaderRoute: typeof AppLeaderboardRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/dashboard': {
-      id: '/_app/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AppDashboardRouteImport
-      parentRoute: typeof AppRoute
-    }
   }
 }
 
-interface AppRouteChildren {
-  AppDashboardRoute: typeof AppDashboardRoute
-  AppLeaderboardRoute: typeof AppLeaderboardRoute
-  AppPomodoroRoute: typeof AppPomodoroRoute
-  AppProfileRoute: typeof AppProfileRoute
-  AppQuestsRoute: typeof AppQuestsRoute
-  AppSettingsRoute: typeof AppSettingsRoute
-  AppSkillsRoute: typeof AppSkillsRoute
-}
-
-const AppRouteChildren: AppRouteChildren = {
-  AppDashboardRoute: AppDashboardRoute,
-  AppLeaderboardRoute: AppLeaderboardRoute,
-  AppPomodoroRoute: AppPomodoroRoute,
-  AppProfileRoute: AppProfileRoute,
-  AppQuestsRoute: AppQuestsRoute,
-  AppSettingsRoute: AppSettingsRoute,
-  AppSkillsRoute: AppSkillsRoute,
-}
-
-const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppRoute: AppRouteWithChildren,
-  CharacterRoute: CharacterRoute,
-  LoginRoute: LoginRoute,
+  ContactRoute: ContactRoute,
+  StudioRoute: StudioRoute,
+  WorkRoute: WorkRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
