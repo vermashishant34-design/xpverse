@@ -39,7 +39,7 @@ function Leaderboard() {
           return (
             <motion.div key={u.name}
               initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.15 }}
-              className={`relative rounded-3xl glass p-8 text-center ${heights[i]} ${("isMe" in u && u.isMe) ? "border-neon-purple glow" : ""}`}
+              className={`relative rounded-3xl glass p-8 text-center ${heights[i]} ${u.isMe ? "border-neon-purple glow" : ""}`}
             >
               <div className="font-display text-5xl font-bold gradient-text">#{i + 1}</div>
               <div className="mx-auto mt-4 grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-neon-blue to-neon-purple font-bold text-background">{u.name[0]}</div>
@@ -55,13 +55,13 @@ function Leaderboard() {
         {rest.map((u, i) => (
           <motion.div key={u.name}
             initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}
-            className={`flex items-center justify-between px-6 py-4 ${("isMe" in u && u.isMe) ? "bg-neon-purple/10" : ""}`}
+            className={`flex items-center justify-between px-6 py-4 ${u.isMe ? "bg-neon-purple/10" : ""}`}
           >
             <div className="flex items-center gap-4">
               <span className="w-8 font-mono text-sm text-muted-foreground">#{i + 4}</span>
               <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-neon-blue to-neon-purple font-bold text-background">{u.name[0]}</span>
               <div>
-                <div className="font-display text-base">{u.name} {("isMe" in u && u.isMe) && <span className="text-neon-cyan font-mono text-[10px] uppercase">· you</span>}</div>
+                <div className="font-display text-base">{u.name} {u.isMe && <span className="text-neon-cyan font-mono text-[10px] uppercase">· you</span>}</div>
                 <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Lv {u.lv} · {u.cls}</div>
               </div>
             </div>
