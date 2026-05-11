@@ -41,7 +41,8 @@ const initial: Player = {
     { id: "a2", title: "Rising Star", desc: "Reach level 5", rarity: "rare", unlocked: false },
     { id: "a3", title: "Mind Forged", desc: "Intelligence ≥ 10", rarity: "epic", unlocked: false },
     { id: "a4", title: "Ascendant", desc: "Reach level 20", rarity: "legendary", unlocked: false },
-  ],
+  ] as Achievement[],
+  created: false,
 };
 
 let state: Player = (() => {

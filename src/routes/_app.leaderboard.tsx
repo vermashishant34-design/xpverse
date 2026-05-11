@@ -17,10 +17,11 @@ export const Route = createFileRoute("/_app/leaderboard")({
   component: Leaderboard,
 });
 
+type Row = { name: string; lv: number; xp: number; cls: string; isMe?: boolean };
 function Leaderboard() {
   const p = usePlayer();
-  const me = { name: p.username, lv: p.level, xp: p.xp + p.level * 200, cls: p.charClass, isMe: true };
-  const all = [...FAKE, me].sort((a, b) => b.xp - a.xp);
+  const me: Row = { name: p.username, lv: p.level, xp: p.xp + p.level * 200, cls: p.charClass, isMe: true };
+  const all: Row[] = [...FAKE, me].sort((a, b) => b.xp - a.xp);
   const top3 = all.slice(0, 3);
   const rest = all.slice(3);
 
