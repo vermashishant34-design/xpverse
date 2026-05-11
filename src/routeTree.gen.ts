@@ -9,24 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WorkRouteImport } from './routes/work'
-import { Route as StudioRouteImport } from './routes/studio'
-import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CharacterRouteImport } from './routes/character'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppSkillsRouteImport } from './routes/_app.skills'
+import { Route as AppQuestsRouteImport } from './routes/_app.quests'
+import { Route as AppProfileRouteImport } from './routes/_app.profile'
+import { Route as AppLeaderboardRouteImport } from './routes/_app.leaderboard'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppAiRouteImport } from './routes/_app.ai'
+import { Route as AppAchievementsRouteImport } from './routes/_app.achievements'
 
-const WorkRoute = WorkRouteImport.update({
-  id: '/work',
-  path: '/work',
+const CharacterRoute = CharacterRouteImport.update({
+  id: '/character',
+  path: '/character',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StudioRoute = StudioRouteImport.update({
-  id: '/studio',
-  path: '/studio',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -34,62 +34,134 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppSkillsRoute = AppSkillsRouteImport.update({
+  id: '/skills',
+  path: '/skills',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQuestsRoute = AppQuestsRouteImport.update({
+  id: '/quests',
+  path: '/quests',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLeaderboardRoute = AppLeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAiRoute = AppAiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAchievementsRoute = AppAchievementsRouteImport.update({
+  id: '/achievements',
+  path: '/achievements',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/contact': typeof ContactRoute
-  '/studio': typeof StudioRoute
-  '/work': typeof WorkRoute
+  '/character': typeof CharacterRoute
+  '/achievements': typeof AppAchievementsRoute
+  '/ai': typeof AppAiRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/leaderboard': typeof AppLeaderboardRoute
+  '/profile': typeof AppProfileRoute
+  '/quests': typeof AppQuestsRoute
+  '/skills': typeof AppSkillsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/contact': typeof ContactRoute
-  '/studio': typeof StudioRoute
-  '/work': typeof WorkRoute
+  '/character': typeof CharacterRoute
+  '/achievements': typeof AppAchievementsRoute
+  '/ai': typeof AppAiRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/leaderboard': typeof AppLeaderboardRoute
+  '/profile': typeof AppProfileRoute
+  '/quests': typeof AppQuestsRoute
+  '/skills': typeof AppSkillsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/contact': typeof ContactRoute
-  '/studio': typeof StudioRoute
-  '/work': typeof WorkRoute
+  '/_app': typeof AppRouteWithChildren
+  '/character': typeof CharacterRoute
+  '/_app/achievements': typeof AppAchievementsRoute
+  '/_app/ai': typeof AppAiRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/leaderboard': typeof AppLeaderboardRoute
+  '/_app/profile': typeof AppProfileRoute
+  '/_app/quests': typeof AppQuestsRoute
+  '/_app/skills': typeof AppSkillsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/contact' | '/studio' | '/work'
+  fullPaths:
+    | '/'
+    | '/character'
+    | '/achievements'
+    | '/ai'
+    | '/dashboard'
+    | '/leaderboard'
+    | '/profile'
+    | '/quests'
+    | '/skills'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/contact' | '/studio' | '/work'
-  id: '__root__' | '/' | '/contact' | '/studio' | '/work'
+  to:
+    | '/'
+    | '/character'
+    | '/achievements'
+    | '/ai'
+    | '/dashboard'
+    | '/leaderboard'
+    | '/profile'
+    | '/quests'
+    | '/skills'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/character'
+    | '/_app/achievements'
+    | '/_app/ai'
+    | '/_app/dashboard'
+    | '/_app/leaderboard'
+    | '/_app/profile'
+    | '/_app/quests'
+    | '/_app/skills'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ContactRoute: typeof ContactRoute
-  StudioRoute: typeof StudioRoute
-  WorkRoute: typeof WorkRoute
+  AppRoute: typeof AppRouteWithChildren
+  CharacterRoute: typeof CharacterRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/work': {
-      id: '/work'
-      path: '/work'
-      fullPath: '/work'
-      preLoaderRoute: typeof WorkRouteImport
+    '/character': {
+      id: '/character'
+      path: '/character'
+      fullPath: '/character'
+      preLoaderRoute: typeof CharacterRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/studio': {
-      id: '/studio'
-      path: '/studio'
-      fullPath: '/studio'
-      preLoaderRoute: typeof StudioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -99,15 +171,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/skills': {
+      id: '/_app/skills'
+      path: '/skills'
+      fullPath: '/skills'
+      preLoaderRoute: typeof AppSkillsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/quests': {
+      id: '/_app/quests'
+      path: '/quests'
+      fullPath: '/quests'
+      preLoaderRoute: typeof AppQuestsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/leaderboard': {
+      id: '/_app/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof AppLeaderboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/ai': {
+      id: '/_app/ai'
+      path: '/ai'
+      fullPath: '/ai'
+      preLoaderRoute: typeof AppAiRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/achievements': {
+      id: '/_app/achievements'
+      path: '/achievements'
+      fullPath: '/achievements'
+      preLoaderRoute: typeof AppAchievementsRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAchievementsRoute: typeof AppAchievementsRoute
+  AppAiRoute: typeof AppAiRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppLeaderboardRoute: typeof AppLeaderboardRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppQuestsRoute: typeof AppQuestsRoute
+  AppSkillsRoute: typeof AppSkillsRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAchievementsRoute: AppAchievementsRoute,
+  AppAiRoute: AppAiRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppLeaderboardRoute: AppLeaderboardRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppQuestsRoute: AppQuestsRoute,
+  AppSkillsRoute: AppSkillsRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ContactRoute: ContactRoute,
-  StudioRoute: StudioRoute,
-  WorkRoute: WorkRoute,
+  AppRoute: AppRouteWithChildren,
+  CharacterRoute: CharacterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
