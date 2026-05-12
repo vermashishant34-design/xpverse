@@ -24,66 +24,156 @@ function Landing() {
     <div className="relative noise">
       <MouseGlow />
 
-      {/* HERO */}
-      <section ref={ref} className="relative h-screen overflow-hidden grid-bg">
-        <ParticleField density={70} />
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 blur-3xl animate-aurora" />
+      {/* HERO — Entry Lobby */}
+      <section ref={ref} className="relative h-screen overflow-hidden bg-black">
+        {/* marquee top ticker */}
+        <div className="absolute top-0 left-0 right-0 z-30 overflow-hidden border-b border-white/5 bg-black/60 backdrop-blur">
+          <div className="flex gap-10 whitespace-nowrap py-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground animate-marquee">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <span key={i} className="flex items-center gap-10">
+                <span>◆ XPVERSE Online</span>
+                <span className="text-neon-cyan">Press START to enter</span>
+                <span>◇ v1.0 — Build 2026</span>
+                <span className="text-neon-cyan">New season available</span>
+              </span>
+            ))}
+          </div>
         </div>
 
-        <nav className="relative z-20 mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
+        {/* nav */}
+        <nav className="relative z-20 mx-auto mt-10 flex max-w-7xl items-center justify-between px-6 py-6">
           <div className="flex items-center gap-2 font-display text-lg font-bold">
-            <span className="grid h-8 w-8 place-items-center rounded-md animate-aurora text-background">X</span>
+            <span className="grid h-8 w-8 place-items-center rounded-md border border-white/15 text-foreground">X</span>
             XPVERSE
           </div>
-          <div className="hidden md:flex items-center gap-6 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+          <div className="hidden md:flex items-center gap-6 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
             <a href="#features" className="hover:text-foreground">Features</a>
             <a href="#system" className="hover:text-foreground">System</a>
             <a href="#ai" className="hover:text-foreground">AI</a>
           </div>
-          <Link to="/character" className="rounded-full glass px-4 py-2 font-mono text-xs uppercase tracking-widest hover:glow transition">Enter</Link>
+          <Link to="/character" className="rounded-full border border-white/15 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.3em] hover:bg-white/5 transition">● Enter</Link>
         </nav>
 
-        <motion.div style={{ y, opacity }} className="relative z-10 mx-auto flex h-[calc(100vh-100px)] max-w-7xl flex-col items-center justify-center px-6 text-center">
+        {/* atmospheric vignette */}
+        <div className="pointer-events-none absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_30%,rgba(0,0,0,0.85)_100%)]" />
+          <div className="absolute inset-0 opacity-[0.04]" style={{
+            backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.5) 2px, rgba(255,255,255,0.5) 3px)"
+          }} />
+        </div>
+
+        {/* side pillars (stone tower silhouettes) */}
+        <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden md:block w-[18vw]">
+          <div className="absolute inset-y-0 left-0 w-full bg-gradient-to-r from-black via-black/85 to-transparent" />
+          <div className="absolute top-[8%] bottom-0 left-6 w-24 lg:w-32 opacity-60"
+            style={{
+              background: "repeating-linear-gradient(0deg, oklch(0.22 0.005 250) 0px, oklch(0.22 0.005 250) 28px, oklch(0.12 0.004 250) 28px, oklch(0.12 0.004 250) 30px), repeating-linear-gradient(90deg, transparent 0px, transparent 38px, oklch(0.1 0 0) 38px, oklch(0.1 0 0) 40px)",
+              clipPath: "polygon(0 0, 100% 0, 100% 100%, 80% 100%, 80% 96%, 20% 96%, 20% 100%, 0 100%)",
+            }}>
+            {/* arrow slits */}
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="absolute left-1/2 -translate-x-1/2 h-6 w-1.5 bg-black/80 rounded-sm shadow-[0_0_8px_rgba(255,180,80,0.15)]"
+                style={{ top: `${15 + i * 16}%` }} />
+            ))}
+          </div>
+        </div>
+        <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 z-10 hidden md:block w-[18vw]">
+          <div className="absolute inset-y-0 right-0 w-full bg-gradient-to-l from-black via-black/85 to-transparent" />
+          <div className="absolute top-[8%] bottom-0 right-6 w-24 lg:w-32 opacity-60"
+            style={{
+              background: "repeating-linear-gradient(0deg, oklch(0.22 0.005 250) 0px, oklch(0.22 0.005 250) 28px, oklch(0.12 0.004 250) 28px, oklch(0.12 0.004 250) 30px), repeating-linear-gradient(90deg, transparent 0px, transparent 38px, oklch(0.1 0 0) 38px, oklch(0.1 0 0) 40px)",
+              clipPath: "polygon(0 0, 100% 0, 100% 100%, 80% 100%, 80% 96%, 20% 96%, 20% 100%, 0 100%)",
+            }}>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="absolute left-1/2 -translate-x-1/2 h-6 w-1.5 bg-black/80 rounded-sm shadow-[0_0_8px_rgba(255,180,80,0.15)]"
+                style={{ top: `${15 + i * 16}%` }} />
+            ))}
+          </div>
+        </div>
+
+        {/* faint particle haze in center only */}
+        <div className="absolute inset-0 z-0 opacity-30">
+          <ParticleField density={35} />
+        </div>
+
+        {/* center stage */}
+        <motion.div style={{ y, opacity }} className="relative z-20 mx-auto flex h-[calc(100vh-120px)] max-w-5xl flex-col items-center justify-center px-6 text-center">
           <motion.p
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="font-mono text-xs uppercase tracking-[0.4em] text-neon-cyan"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.8 }}
+            className="font-mono text-[10px] uppercase tracking-[0.5em] text-muted-foreground"
           >
-            ◉ Self · v1.0 · Online
+            ◆  ENTRY LOBBY  ◆
           </motion.p>
+
           <motion.h1
-            initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-6 font-display text-6xl md:text-8xl lg:text-[10rem] font-bold leading-[0.9] tracking-tighter text-balance"
+            initial={{ opacity: 0, y: 30, filter: "blur(20px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ delay: 0.5, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-8 font-display font-bold leading-[0.85] tracking-tighter text-balance"
+            style={{ fontSize: "clamp(3.5rem, 13vw, 11rem)" }}
           >
-            Turn your life <br />
-            <span className="gradient-text">into a game.</span>
+            <span className="block bg-gradient-to-b from-foreground via-foreground/80 to-foreground/30 bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(255,255,255,0.08)]">
+              XPVERSE
+            </span>
           </motion.h1>
+
           <motion.p
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
-            className="mt-8 max-w-xl font-sans text-base md:text-lg text-muted-foreground text-balance"
+            initial={{ opacity: 0, letterSpacing: "0.2em" }} animate={{ opacity: 1, letterSpacing: "0.5em" }}
+            transition={{ delay: 1, duration: 1 }}
+            className="mt-2 font-mono text-xs uppercase text-muted-foreground"
           >
-            XPVerse is a cinematic productivity RPG. Real-world tasks become quests.
-            Discipline becomes XP. You become the protagonist.
+            A  LIFE  PLATFORMER
           </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}
-            className="mt-10 flex flex-col sm:flex-row items-center gap-4"
+
+          {/* menu */}
+          <motion.ul
+            initial="hidden" animate="show"
+            variants={{ show: { transition: { staggerChildren: 0.12, delayChildren: 1.4 } } }}
+            className="mt-14 space-y-4 font-mono text-sm uppercase tracking-[0.4em]"
           >
-            <Link to="/character"
-              className="group relative overflow-hidden rounded-full bg-foreground px-8 py-4 font-mono text-xs uppercase tracking-widest text-background transition hover:scale-105">
-              <span className="relative z-10">Start your journey →</span>
-              <span className="absolute inset-0 -z-0 animate-aurora opacity-0 group-hover:opacity-100 transition" />
-            </Link>
-            <Link to="/dashboard" className="rounded-full glass px-8 py-4 font-mono text-xs uppercase tracking-widest hover:glow">
-              View Dashboard
-            </Link>
-          </motion.div>
+            {[
+              { label: "Start", to: "/character", primary: true },
+              { label: "Dashboard", to: "/dashboard" },
+              { label: "Quests", to: "/quests" },
+              { label: "Leaderboard", to: "/leaderboard" },
+            ].map((item) => (
+              <motion.li
+                key={item.label}
+                variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
+                className="group relative"
+              >
+                <Link to={item.to} className="inline-flex items-center gap-4 px-4 py-1 text-muted-foreground transition hover:text-foreground">
+                  <span className={`opacity-0 transition group-hover:opacity-100 ${item.primary ? "text-neon-cyan opacity-100 animate-pulse" : ""}`}>▸</span>
+                  <span className={item.primary ? "text-foreground" : ""}>{item.label}</span>
+                </Link>
+              </motion.li>
+            ))}
+          </motion.ul>
+
+          <motion.p
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.4 }}
+            className="mt-12 font-mono text-[10px] uppercase tracking-[0.4em] text-muted-foreground/60"
+          >
+            ✦  Crafted with discipline  ✦
+          </motion.p>
         </motion.div>
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.4em] text-muted-foreground animate-pulse">
-          ↓ Scroll
+        {/* bottom HUD bars */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-white/5 bg-black/60 backdrop-blur">
+          <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-6 py-3 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+            <div className="flex items-center gap-3">
+              <span>BGM</span>
+              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/5">
+                <div className="h-full w-3/4 bg-gradient-to-r from-foreground/60 to-foreground/20" />
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span>SFX</span>
+              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/5">
+                <div className="h-full w-1/2 bg-gradient-to-r from-foreground/60 to-foreground/20" />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
