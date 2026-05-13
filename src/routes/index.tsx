@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { ParticleField } from "@/components/ParticleField";
-import { ParticleWave } from "@/components/ParticleWave";
 import { MouseGlow } from "@/components/MouseGlow";
 
 export const Route = createFileRoute("/")({
