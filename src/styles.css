@@ -36,37 +36,37 @@
 :root {
   --radius: 0.5rem;
 
-  /* Cinematic Editorial palette */
-  --background: oklch(0.205 0 0); /* #181818 matte charcoal */
-  --foreground: oklch(0.89 0.035 78); /* #EBDCC4 warm beige */
+  /* Brutalist Luxury palette — Navy / Sage / Cyan / Taupe */
+  --background: oklch(0.21 0.008 165); /* #171e19 navy */
+  --foreground: oklch(0.96 0.012 200); /* near white / cyan-tinted */
 
-  --card: oklch(0.24 0.005 50 / 0.6);
-  --card-foreground: oklch(0.89 0.035 78);
-  --popover: oklch(0.22 0.004 50);
-  --popover-foreground: oklch(0.89 0.035 78);
+  --card: oklch(0.26 0.008 165 / 0.6);
+  --card-foreground: oklch(0.96 0.012 200);
+  --popover: oklch(0.24 0.008 165);
+  --popover-foreground: oklch(0.96 0.012 200);
 
-  --primary: oklch(0.74 0.075 45); /* #DC9F85 coral rust */
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.28 0.012 45);
-  --secondary-foreground: oklch(0.89 0.035 78);
+  --primary: oklch(0.81 0.028 175); /* #b7c6c2 sage */
+  --primary-foreground: oklch(0.21 0.008 165);
+  --secondary: oklch(0.31 0.01 165);
+  --secondary-foreground: oklch(0.96 0.012 200);
 
-  --muted: oklch(0.26 0.008 45);
-  --muted-foreground: oklch(0.71 0.018 70); /* #B6A596 muted sage */
-  --accent: oklch(0.74 0.075 45); /* coral rust */
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.55 0.16 30);
-  --destructive-foreground: oklch(0.96 0 0);
+  --muted: oklch(0.28 0.008 165);
+  --muted-foreground: oklch(0.68 0.012 25); /* #9f8d8b taupe */
+  --accent: oklch(0.95 0.028 215); /* #d5f4f9 cyan */
+  --accent-foreground: oklch(0.21 0.008 165);
+  --destructive: oklch(0.58 0.18 28);
+  --destructive-foreground: oklch(0.98 0 0);
 
-  --border: oklch(0.39 0.035 45); /* #66473B deep earth */
-  --input: oklch(0.28 0.012 45);
-  --ring: oklch(0.74 0.075 45);
+  --border: oklch(0.81 0.028 175 / 0.18); /* sage 1px borders */
+  --input: oklch(0.31 0.01 165);
+  --ring: oklch(0.95 0.028 215);
 
-  --neon-cyan: oklch(0.71 0.018 70);
-  --neon-purple: oklch(0.74 0.075 45);
-  --neon-blue: oklch(0.89 0.035 78);
+  --neon-cyan: oklch(0.95 0.028 215); /* cyan #d5f4f9 */
+  --neon-purple: oklch(0.81 0.028 175); /* sage */
+  --neon-blue: oklch(0.88 0.05 230); /* soft blue #bbe2f5 */
 
-  --gradient-aurora: linear-gradient(135deg, oklch(0.89 0.035 78) 0%, oklch(0.74 0.075 45) 55%, oklch(0.27 0.04 35) 100%);
-  --gradient-radial: radial-gradient(circle at 50% 0%, oklch(0.74 0.075 45 / 0.18), transparent 60%);
+  --gradient-aurora: linear-gradient(135deg, oklch(0.95 0.028 215) 0%, oklch(0.81 0.028 175) 55%, oklch(0.83 0.03 75) 100%);
+  --gradient-radial: radial-gradient(circle at 50% 0%, oklch(0.95 0.028 215 / 0.18), transparent 60%);
   --shadow-glow: 0 0 60px oklch(1 0 0 / 0.06), 0 0 120px oklch(1 0 0 / 0.03);
   --shadow-card: 0 1px 0 oklch(1 0 0 / 0.03) inset, 0 50px 100px -20px oklch(0 0 0 / 0.85);
 }
