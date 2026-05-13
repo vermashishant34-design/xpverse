@@ -92,9 +92,12 @@ function Landing() {
           </div>
         </div>
 
-        {/* faint particle haze in center only */}
-        <div className="absolute inset-0 z-0 opacity-30">
-          <ParticleField density={35} />
+        {/* interactive particle-wave background */}
+        <div className="absolute inset-0 z-0">
+          <ParticleWave spacing={32} />
+        </div>
+        <div className="absolute inset-0 z-0 opacity-20 mix-blend-screen">
+          <ParticleField density={25} />
         </div>
 
         {/* center stage */}
