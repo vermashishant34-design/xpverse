@@ -25,17 +25,42 @@ function Landing() {
     <div className="relative noise">
       <MouseGlow />
 
-      {/* HERO — Entry Lobby */}
-      <section ref={ref} className="relative h-screen overflow-hidden bg-black">
+      {/* HERO — Atmospheric Lobby */}
+      <section ref={ref} className="relative h-screen overflow-hidden bg-background">
+        {/* background image */}
+        <div aria-hidden className="absolute inset-0 z-0">
+          <img
+            src={heroBg}
+            alt=""
+            width={1920}
+            height={1080}
+            className="h-full w-full object-cover scale-105 opacity-90"
+          />
+          {/* tonal wash to match palette */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_35%,oklch(0.21_0.008_165/0.85)_100%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/20 to-background" />
+          {/* sage scanlines */}
+          <div className="absolute inset-0 opacity-[0.05] mix-blend-overlay" style={{
+            backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, oklch(0.81 0.028 175 / 0.6) 2px, oklch(0.81 0.028 175 / 0.6) 3px)"
+          }} />
+        </div>
+
+        {/* floating ambient blurs */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-[1]">
+          <div className="absolute -top-20 -left-20 h-[420px] w-[420px] rounded-full bg-accent/15 blur-[120px] animate-float" />
+          <div className="absolute bottom-10 right-0 h-[520px] w-[520px] rounded-full bg-primary/15 blur-[120px] animate-float" style={{ animationDelay: "2s" }} />
+          <div className="absolute top-1/3 left-1/2 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-neon-blue/10 blur-[120px] animate-float" style={{ animationDelay: "4s" }} />
+        </div>
+
         {/* marquee top ticker */}
-        <div className="absolute top-0 left-0 right-0 z-30 overflow-hidden border-b border-white/5 bg-black/60 backdrop-blur">
+        <div className="absolute top-0 left-0 right-0 z-30 overflow-hidden border-b border-border/40 bg-background/40 backdrop-blur-xl">
           <div className="flex gap-10 whitespace-nowrap py-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground animate-marquee">
             {Array.from({ length: 8 }).map((_, i) => (
               <span key={i} className="flex items-center gap-10">
                 <span>◆ XPVERSE Online</span>
-                <span className="text-neon-cyan">Press START to enter</span>
+                <span className="text-accent">Press START to enter</span>
                 <span>◇ v1.0 — Build 2026</span>
-                <span className="text-neon-cyan">New season available</span>
+                <span className="text-accent">New season available</span>
               </span>
             ))}
           </div>
@@ -44,57 +69,20 @@ function Landing() {
         {/* nav */}
         <nav className="relative z-20 mx-auto mt-10 flex max-w-7xl items-center justify-between px-6 py-6">
           <div className="flex items-center gap-2 font-display text-lg font-bold">
-            <span className="grid h-8 w-8 place-items-center rounded-md border border-white/15 text-foreground">X</span>
+            <span className="grid h-8 w-8 place-items-center rounded-md border border-foreground/20 text-foreground">X</span>
             XPVERSE
           </div>
           <div className="hidden md:flex items-center gap-6 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-            <a href="#features" className="hover:text-foreground">Features</a>
-            <a href="#system" className="hover:text-foreground">System</a>
-            <a href="#ai" className="hover:text-foreground">AI</a>
+            <a href="#features" className="hover:text-foreground transition">Features</a>
+            <a href="#system" className="hover:text-foreground transition">System</a>
+            <a href="#ai" className="hover:text-foreground transition">AI</a>
           </div>
-          <Link to="/character" className="rounded-full border border-white/15 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.3em] hover:bg-white/5 transition">● Enter</Link>
+          <Link to="/character" className="rounded-full border border-foreground/20 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.3em] hover:bg-foreground/5 transition">● Enter</Link>
         </nav>
 
-        {/* atmospheric vignette */}
-        <div className="pointer-events-none absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_30%,rgba(0,0,0,0.85)_100%)]" />
-          <div className="absolute inset-0 opacity-[0.04]" style={{
-            backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.5) 2px, rgba(255,255,255,0.5) 3px)"
-          }} />
-        </div>
-
-        {/* side pillars (stone tower silhouettes) */}
-        <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden md:block w-[18vw]">
-          <div className="absolute inset-y-0 left-0 w-full bg-gradient-to-r from-black via-black/85 to-transparent" />
-          <div className="absolute top-[8%] bottom-0 left-6 w-24 lg:w-32 opacity-60"
-            style={{
-              background: "repeating-linear-gradient(0deg, oklch(0.22 0.005 250) 0px, oklch(0.22 0.005 250) 28px, oklch(0.12 0.004 250) 28px, oklch(0.12 0.004 250) 30px), repeating-linear-gradient(90deg, transparent 0px, transparent 38px, oklch(0.1 0 0) 38px, oklch(0.1 0 0) 40px)",
-              clipPath: "polygon(0 0, 100% 0, 100% 100%, 80% 100%, 80% 96%, 20% 96%, 20% 100%, 0 100%)",
-            }}>
-            {/* arrow slits */}
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="absolute left-1/2 -translate-x-1/2 h-6 w-1.5 bg-black/80 rounded-sm shadow-[0_0_8px_rgba(255,180,80,0.15)]"
-                style={{ top: `${15 + i * 16}%` }} />
-            ))}
-          </div>
-        </div>
-        <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 z-10 hidden md:block w-[18vw]">
-          <div className="absolute inset-y-0 right-0 w-full bg-gradient-to-l from-black via-black/85 to-transparent" />
-          <div className="absolute top-[8%] bottom-0 right-6 w-24 lg:w-32 opacity-60"
-            style={{
-              background: "repeating-linear-gradient(0deg, oklch(0.22 0.005 250) 0px, oklch(0.22 0.005 250) 28px, oklch(0.12 0.004 250) 28px, oklch(0.12 0.004 250) 30px), repeating-linear-gradient(90deg, transparent 0px, transparent 38px, oklch(0.1 0 0) 38px, oklch(0.1 0 0) 40px)",
-              clipPath: "polygon(0 0, 100% 0, 100% 100%, 80% 100%, 80% 96%, 20% 96%, 20% 100%, 0 100%)",
-            }}>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="absolute left-1/2 -translate-x-1/2 h-6 w-1.5 bg-black/80 rounded-sm shadow-[0_0_8px_rgba(255,180,80,0.15)]"
-                style={{ top: `${15 + i * 16}%` }} />
-            ))}
-          </div>
-        </div>
-
-        {/* faint particle haze in center only */}
-        <div className="absolute inset-0 z-0 opacity-30">
-          <ParticleField density={35} />
+        {/* faint particle haze */}
+        <div className="absolute inset-0 z-[2] opacity-25">
+          <ParticleField density={28} />
         </div>
 
         {/* center stage */}
@@ -109,11 +97,11 @@ function Landing() {
           <motion.h1
             initial={{ opacity: 0, y: 30, filter: "blur(20px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ delay: 0.5, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-8 font-display font-bold leading-[0.85] tracking-tighter text-balance"
+            transition={{ delay: 0.5, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-8 font-display font-bold uppercase leading-[0.85] tracking-tighter text-balance"
             style={{ fontSize: "clamp(3.5rem, 13vw, 11rem)" }}
           >
-            <span className="block bg-gradient-to-b from-foreground via-foreground/80 to-foreground/30 bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(255,255,255,0.08)]">
+            <span className="block bg-gradient-to-b from-foreground via-foreground/85 to-foreground/30 bg-clip-text text-transparent drop-shadow-[0_4px_30px_oklch(0.95_0.028_215/0.15)]">
               XPVERSE
             </span>
           </motion.h1>
@@ -144,7 +132,7 @@ function Landing() {
                 className="group relative"
               >
                 <Link to={item.to} className="inline-flex items-center gap-4 px-4 py-1 text-muted-foreground transition hover:text-foreground">
-                  <span className={`opacity-0 transition group-hover:opacity-100 ${item.primary ? "text-neon-cyan opacity-100 animate-pulse" : ""}`}>▸</span>
+                  <span className={`opacity-0 transition group-hover:opacity-100 ${item.primary ? "text-accent opacity-100 animate-pulse" : ""}`}>▸</span>
                   <span className={item.primary ? "text-foreground" : ""}>{item.label}</span>
                 </Link>
               </motion.li>
@@ -160,18 +148,18 @@ function Landing() {
         </motion.div>
 
         {/* bottom HUD bars */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-white/5 bg-black/60 backdrop-blur">
+        <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-border/40 bg-background/40 backdrop-blur-xl">
           <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-6 py-3 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
             <div className="flex items-center gap-3">
               <span>BGM</span>
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/5">
-                <div className="h-full w-3/4 bg-gradient-to-r from-foreground/60 to-foreground/20" />
+              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-foreground/5">
+                <div className="h-full w-3/4 bg-gradient-to-r from-accent/70 to-primary/40" />
               </div>
             </div>
             <div className="flex items-center gap-3">
               <span>SFX</span>
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/5">
-                <div className="h-full w-1/2 bg-gradient-to-r from-foreground/60 to-foreground/20" />
+              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-foreground/5">
+                <div className="h-full w-1/2 bg-gradient-to-r from-accent/70 to-primary/40" />
               </div>
             </div>
           </div>
