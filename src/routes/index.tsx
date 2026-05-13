@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { ParticleField } from "@/components/ParticleField";
-import { ParticleWave } from "@/components/ParticleWave";
 import { MouseGlow } from "@/components/MouseGlow";
 
 export const Route = createFileRoute("/")({
@@ -92,12 +91,9 @@ function Landing() {
           </div>
         </div>
 
-        {/* interactive particle-wave background */}
-        <div className="absolute inset-0 z-0">
-          <ParticleWave spacing={32} />
-        </div>
-        <div className="absolute inset-0 z-0 opacity-20 mix-blend-screen">
-          <ParticleField density={25} />
+        {/* faint particle haze in center only */}
+        <div className="absolute inset-0 z-0 opacity-30">
+          <ParticleField density={35} />
         </div>
 
         {/* center stage */}
