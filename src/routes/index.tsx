@@ -53,7 +53,7 @@ function Landing() {
         </div>
 
         {/* nav */}
-        <nav className="relative z-20 mx-auto mt-10 flex max-w-7xl items-center justify-between px-6 py-6">
+        <nav className="absolute top-0 left-0 right-0 z-30 mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2 font-display text-lg font-bold">
             <span className="grid h-8 w-8 place-items-center rounded-md border border-foreground/20 text-foreground">X</span>
             XPVERSE
