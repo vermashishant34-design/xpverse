@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { usePlayer } from "@/store/player";
 
 const RARITY: Record<string, string> = {
-  common: "from-slate-400 to-slate-600",
-  rare: "from-neon-blue to-cyan-400",
-  epic: "from-neon-purple to-fuchsia-500",
-  legendary: "from-amber-300 via-orange-400 to-pink-500",
+  common: "from-muted-foreground to-muted",
+  rare: "from-neon-blue to-neon-cyan",
+  epic: "from-neon-purple to-neon-blue",
+  legendary: "from-neon-cyan via-neon-purple to-accent",
 };
 
 export const Route = createFileRoute("/_app/achievements")({
