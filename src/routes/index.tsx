@@ -101,6 +101,7 @@ function Landing() {
             </Link>
           </motion.div>
         </motion.div>
+      </section>
 
       {/* FEATURES */}
       <Section id="features" eyebrow="Features" title="A complete RPG, layered over reality.">
