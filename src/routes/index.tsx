@@ -72,19 +72,12 @@ function Landing() {
         </div>
 
         {/* center stage */}
-        <motion.div style={{ y, opacity }} className="relative z-20 mx-auto flex h-[calc(100vh-120px)] max-w-5xl flex-col items-center justify-center px-6 text-center">
-          <motion.p
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.8 }}
-            className="font-mono text-[10px] uppercase tracking-[0.5em] text-muted-foreground"
-          >
-            ◆  ENTRY LOBBY  ◆
-          </motion.p>
-
+        <motion.div style={{ y, opacity }} className="relative z-20 mx-auto flex h-screen max-w-5xl flex-col items-center justify-center px-6 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 30, filter: "blur(20px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ delay: 0.5, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-8 font-display font-bold uppercase leading-[0.85] tracking-tighter text-balance"
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display font-bold uppercase leading-[0.85] tracking-tighter text-balance"
             style={{ fontSize: "clamp(3.5rem, 13vw, 11rem)" }}
           >
             <span className="block bg-gradient-to-b from-foreground via-foreground/85 to-foreground/30 bg-clip-text text-transparent drop-shadow-[0_4px_30px_oklch(0.95_0.028_215/0.15)]">
@@ -93,63 +86,21 @@ function Landing() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, letterSpacing: "0.2em" }} animate={{ opacity: 1, letterSpacing: "0.5em" }}
-            transition={{ delay: 1, duration: 1 }}
-            className="mt-2 font-mono text-xs uppercase text-muted-foreground"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.8 }}
+            className="mt-6 font-mono text-xs uppercase tracking-[0.5em] text-muted-foreground"
           >
             A  LIFE  PLATFORMER
           </motion.p>
 
-          {/* menu */}
-          <motion.ul
-            initial="hidden" animate="show"
-            variants={{ show: { transition: { staggerChildren: 0.12, delayChildren: 1.4 } } }}
-            className="mt-14 space-y-4 font-mono text-sm uppercase tracking-[0.4em]"
+          <motion.div
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, duration: 0.8 }}
+            className="mt-12"
           >
-            {[
-              { label: "Start", to: "/character", primary: true },
-              { label: "Dashboard", to: "/dashboard" },
-              { label: "Quests", to: "/quests" },
-              { label: "Leaderboard", to: "/leaderboard" },
-            ].map((item) => (
-              <motion.li
-                key={item.label}
-                variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
-                className="group relative"
-              >
-                <Link to={item.to} className="inline-flex items-center gap-4 px-4 py-1 text-muted-foreground transition hover:text-foreground">
-                  <span className={`opacity-0 transition group-hover:opacity-100 ${item.primary ? "text-accent opacity-100 animate-pulse" : ""}`}>▸</span>
-                  <span className={item.primary ? "text-foreground" : ""}>{item.label}</span>
-                </Link>
-              </motion.li>
-            ))}
-          </motion.ul>
-
-          <motion.p
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.4 }}
-            className="mt-12 font-mono text-[10px] uppercase tracking-[0.4em] text-muted-foreground/60"
-          >
-            ✦  Crafted with discipline  ✦
-          </motion.p>
+            <Link to="/character" className="inline-flex items-center gap-3 rounded-full border border-foreground/30 px-6 py-3 font-mono text-[11px] uppercase tracking-[0.4em] hover:bg-foreground/5 transition">
+              <span className="text-accent animate-pulse">▸</span> Start
+            </Link>
+          </motion.div>
         </motion.div>
-
-        {/* bottom HUD bars */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-border/40 bg-background/40 backdrop-blur-xl">
-          <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-6 py-3 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-            <div className="flex items-center gap-3">
-              <span>BGM</span>
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-foreground/5">
-                <div className="h-full w-3/4 bg-gradient-to-r from-accent/70 to-primary/40" />
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <span>SFX</span>
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-foreground/5">
-                <div className="h-full w-1/2 bg-gradient-to-r from-accent/70 to-primary/40" />
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* FEATURES */}
