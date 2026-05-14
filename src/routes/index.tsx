@@ -52,20 +52,6 @@ function Landing() {
           <div className="absolute top-1/3 left-1/2 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-neon-blue/10 blur-[120px] animate-float" style={{ animationDelay: "4s" }} />
         </div>
 
-        {/* marquee top ticker */}
-        <div className="absolute top-0 left-0 right-0 z-30 overflow-hidden border-b border-border/40 bg-background/40 backdrop-blur-xl">
-          <div className="flex gap-10 whitespace-nowrap py-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground animate-marquee">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <span key={i} className="flex items-center gap-10">
-                <span>◆ XPVERSE Online</span>
-                <span className="text-accent">Press START to enter</span>
-                <span>◇ v1.0 — Build 2026</span>
-                <span className="text-accent">New season available</span>
-              </span>
-            ))}
-          </div>
-        </div>
-
         {/* nav */}
         <nav className="relative z-20 mx-auto mt-10 flex max-w-7xl items-center justify-between px-6 py-6">
           <div className="flex items-center gap-2 font-display text-lg font-bold">
