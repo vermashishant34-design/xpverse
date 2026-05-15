@@ -36,10 +36,10 @@ function Character() {
   return (
     <div className="relative min-h-screen overflow-hidden grid-bg noise">
       <ParticleField density={50} />
+      <Link to="/" className="absolute top-6 left-6 z-20 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground transition">
+        ← Back to home
+      </Link>
       <div className="relative z-10 mx-auto max-w-3xl px-6 py-20">
-        <Link to="/" className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground transition mb-8">
-          ← Back to home
-        </Link>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-neon-cyan">— Initialization</p>
           <h1 className="mt-3 font-display text-5xl md:text-7xl font-bold tracking-tighter">
