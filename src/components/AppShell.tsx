@@ -1,6 +1,7 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { MouseGlow } from "./MouseGlow";
+import { ParticleField } from "./ParticleField";
 import { usePlayer } from "@/store/player";
 
 const NAV = [
@@ -18,6 +19,9 @@ export function AppShell() {
   return (
     <div className="relative min-h-screen noise grid-bg">
       <MouseGlow />
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 opacity-40">
+        <ParticleField density={45} />
+      </div>
       <header className="sticky top-0 z-40 glass-strong">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-2 font-display text-lg font-bold">
