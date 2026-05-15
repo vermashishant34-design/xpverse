@@ -5,6 +5,7 @@ import { ParticleField } from "./ParticleField";
 import { usePlayer } from "@/store/player";
 
 const NAV = [
+  { to: "/", label: "Home" },
   { to: "/dashboard", label: "Dashboard" },
   { to: "/quests", label: "Quests" },
   { to: "/skills", label: "Skills" },
