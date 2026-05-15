@@ -31,7 +31,7 @@ export function AppShell() {
           </Link>
           <nav className="hidden md:flex items-center gap-1">
             {NAV.map(n => {
-              const active = loc.pathname.startsWith(n.to);
+              const active = n.to === "/" ? loc.pathname === "/" : loc.pathname.startsWith(n.to);
               return (
                 <Link key={n.to} to={n.to}
                   className={`rounded-md px-3 py-1.5 font-mono text-xs uppercase tracking-widest transition ${active ? "bg-white/10 text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
