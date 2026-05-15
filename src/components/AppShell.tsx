@@ -1,6 +1,7 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { MouseGlow } from "./MouseGlow";
+import { ParticleField } from "./ParticleField";
 import { usePlayer } from "@/store/player";
 
 const NAV = [
