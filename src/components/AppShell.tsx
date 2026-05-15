@@ -21,7 +21,7 @@ export function AppShell() {
     <div className="relative min-h-screen noise grid-bg">
       <MouseGlow />
       <div aria-hidden className="pointer-events-none fixed inset-0 z-0 opacity-70">
-        <ParticleField density={110} />
+        <ParticleField density={61} />
       </div>
       <header className="sticky top-0 z-40 glass-strong">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">

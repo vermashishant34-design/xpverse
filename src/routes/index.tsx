@@ -68,7 +68,7 @@ function Landing() {
 
         {/* faint particle haze */}
         <div className="absolute inset-0 z-[2] opacity-70">
-          <ParticleField density={120} />
+          <ParticleField density={66} />
         </div>
 
         {/* center stage */}
