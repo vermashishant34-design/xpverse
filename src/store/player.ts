@@ -1,8 +1,10 @@
 import { useSyncExternalStore } from "react";
 
-export type Quest = { id: string; title: string; xp: number; coins: number; skill: keyof Skills; done: boolean };
+export type Quest = { id: string; title: string; xp: number; coins: number; skill: keyof Skills; done: boolean; createdAt: number };
 export type Skills = { intelligence: number; strength: number; discipline: number; creativity: number; charisma: number };
 export type Achievement = { id: string; title: string; desc: string; rarity: "common" | "rare" | "epic" | "legendary"; unlocked: boolean };
+export type ScreenTimeEntry = { id: string; app: string; minutes: number; productivity: number; date: string };
+export type NotificationItem = { id: string; text: string; tone: "xp" | "level" | "quest" | "skill" | "info"; at: number };
 
 export type Player = {
   username: string;
@@ -11,15 +13,21 @@ export type Player = {
   level: number;
   xp: number;
   coins: number;
+  streak: number;
+  lastActiveDay: string | null;
   skills: Skills;
   quests: Quest[];
   achievements: Achievement[];
+  screenTime: ScreenTimeEntry[];
+  notifications: NotificationItem[];
   created: boolean;
 };
 
 export const xpForLevel = (lvl: number) => 100 * lvl + (lvl - 1) * 50;
 
-const KEY = "xpverse:player:v1";
+const KEY = "xpverse:player:v2";
+
+const todayKey = () => new Date().toISOString().slice(0, 10);
 
 const initial: Player = {
   username: "Wanderer",
@@ -28,20 +36,30 @@ const initial: Player = {
   level: 1,
   xp: 0,
   coins: 0,
+  streak: 0,
+  lastActiveDay: null,
   skills: { intelligence: 1, strength: 1, discipline: 1, creativity: 1, charisma: 1 },
   quests: [
-    { id: "q1", title: "Read 20 pages", xp: 60, coins: 10, skill: "intelligence", done: false },
-    { id: "q2", title: "30 min workout", xp: 80, coins: 15, skill: "strength", done: false },
-    { id: "q3", title: "Deep work session", xp: 120, coins: 20, skill: "discipline", done: false },
-    { id: "q4", title: "Create something new", xp: 100, coins: 18, skill: "creativity", done: false },
-    { id: "q5", title: "Reach out to a friend", xp: 50, coins: 8, skill: "charisma", done: false },
+    { id: "q1", title: "Read 20 pages", xp: 60, coins: 10, skill: "intelligence", done: false, createdAt: Date.now() },
+    { id: "q2", title: "30 min workout", xp: 80, coins: 15, skill: "strength", done: false, createdAt: Date.now() },
+    { id: "q3", title: "Deep work session", xp: 120, coins: 20, skill: "discipline", done: false, createdAt: Date.now() },
+    { id: "q4", title: "Create something new", xp: 100, coins: 18, skill: "creativity", done: false, createdAt: Date.now() },
+    { id: "q5", title: "Reach out to a friend", xp: 50, coins: 8, skill: "charisma", done: false, createdAt: Date.now() },
   ],
   achievements: [
     { id: "a1", title: "First Step", desc: "Complete your first quest", rarity: "common", unlocked: false },
     { id: "a2", title: "Rising Star", desc: "Reach level 5", rarity: "rare", unlocked: false },
     { id: "a3", title: "Mind Forged", desc: "Intelligence ≥ 10", rarity: "epic", unlocked: false },
     { id: "a4", title: "Ascendant", desc: "Reach level 20", rarity: "legendary", unlocked: false },
+    { id: "a5", title: "Streak Keeper", desc: "Maintain a 7-day streak", rarity: "rare", unlocked: false },
   ] as Achievement[],
+  screenTime: [
+    { id: "s1", app: "VS Code", minutes: 145, productivity: 95, date: todayKey() },
+    { id: "s2", app: "Notion", minutes: 62, productivity: 80, date: todayKey() },
+    { id: "s3", app: "Twitter", minutes: 48, productivity: 20, date: todayKey() },
+    { id: "s4", app: "YouTube", minutes: 35, productivity: 35, date: todayKey() },
+  ],
+  notifications: [],
   created: false,
 };
 
@@ -59,37 +77,73 @@ const emit = () => {
   listeners.forEach(l => l());
 };
 
+const pushNotif = (text: string, tone: NotificationItem["tone"]) => {
+  const n: NotificationItem = { id: `n${Date.now()}-${Math.random()}`, text, tone, at: Date.now() };
+  state = { ...state, notifications: [n, ...state.notifications].slice(0, 30) };
+};
+
+const updateStreak = () => {
+  const today = todayKey();
+  if (state.lastActiveDay === today) return;
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  const streak = state.lastActiveDay === yesterday ? state.streak + 1 : 1;
+  state = { ...state, streak, lastActiveDay: today };
+};
+
 export const playerStore = {
   subscribe(l: () => void) { listeners.add(l); return () => listeners.delete(l); },
   get() { return state; },
   set(p: Partial<Player>) { state = { ...state, ...p }; emit(); },
-  completeQuest(id: string): { leveledUp: boolean; xpGained: number } {
+  completeQuest(id: string): { leveledUp: boolean; xpGained: number; skillGained: keyof Skills | null } {
     const q = state.quests.find(x => x.id === id);
-    if (!q || q.done) return { leveledUp: false, xpGained: 0 };
+    if (!q || q.done) return { leveledUp: false, xpGained: 0, skillGained: null };
     let xp = state.xp + q.xp;
     let level = state.level;
     let leveled = false;
     while (xp >= xpForLevel(level)) { xp -= xpForLevel(level); level++; leveled = true; }
-    const skills = { ...state.skills, [q.skill]: state.skills[q.skill] + 1 };
+    const skillBoost = Math.max(1, Math.round(q.xp / 30));
+    const skills = { ...state.skills, [q.skill]: state.skills[q.skill] + skillBoost };
     const quests = state.quests.map(x => x.id === id ? { ...x, done: true } : x);
+    state = { ...state, xp, level, coins: state.coins + q.coins, skills, quests };
+    updateStreak();
     const achievements = state.achievements.map(a => {
       if (a.unlocked) return a;
       if (a.id === "a1") return { ...a, unlocked: true };
-      if (a.id === "a2" && level >= 5) return { ...a, unlocked: true };
-      if (a.id === "a3" && skills.intelligence >= 10) return { ...a, unlocked: true };
-      if (a.id === "a4" && level >= 20) return { ...a, unlocked: true };
+      if (a.id === "a2" && state.level >= 5) return { ...a, unlocked: true };
+      if (a.id === "a3" && state.skills.intelligence >= 10) return { ...a, unlocked: true };
+      if (a.id === "a4" && state.level >= 20) return { ...a, unlocked: true };
+      if (a.id === "a5" && state.streak >= 7) return { ...a, unlocked: true };
       return a;
     });
-    state = { ...state, xp, level, coins: state.coins + q.coins, skills, quests, achievements };
+    state = { ...state, achievements };
+    pushNotif(`+${q.xp} XP — ${q.title}`, "xp");
+    pushNotif(`${q.skill} +${skillBoost}`, "skill");
+    if (leveled) pushNotif(`Level Up → Lv ${level}`, "level");
     emit();
-    return { leveledUp: leveled, xpGained: q.xp };
+    return { leveledUp: leveled, xpGained: q.xp, skillGained: q.skill };
   },
-  addQuest(title: string, skill: keyof Skills) {
-    const q: Quest = { id: `q${Date.now()}`, title, xp: 70, coins: 12, skill, done: false };
+  addQuest(title: string, skill: keyof Skills, xp = 70, coins = 12) {
+    const q: Quest = { id: `q${Date.now()}`, title, xp, coins, skill, done: false, createdAt: Date.now() };
     state = { ...state, quests: [q, ...state.quests] };
+    pushNotif(`New quest: ${title}`, "quest");
     emit();
   },
-  reset() { state = initial; emit(); },
+  deleteQuest(id: string) {
+    state = { ...state, quests: state.quests.filter(q => q.id !== id) };
+    emit();
+  },
+  logScreenTime(app: string, minutes: number, productivity: number) {
+    const entry: ScreenTimeEntry = { id: `s${Date.now()}`, app, minutes, productivity, date: todayKey() };
+    state = { ...state, screenTime: [entry, ...state.screenTime].slice(0, 20) };
+    pushNotif(`Logged ${minutes}m on ${app}`, "info");
+    emit();
+  },
+  removeScreenTime(id: string) {
+    state = { ...state, screenTime: state.screenTime.filter(s => s.id !== id) };
+    emit();
+  },
+  clearNotifications() { state = { ...state, notifications: [] }; emit(); },
+  reset() { state = { ...initial, screenTime: initial.screenTime.map(s => ({ ...s, date: todayKey() })) }; emit(); },
 };
 
 const serverSnap = () => initial;
