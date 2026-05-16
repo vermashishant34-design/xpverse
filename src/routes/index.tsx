@@ -27,16 +27,19 @@ function Landing() {
 
       {/* HERO — Atmospheric Lobby */}
       <section ref={ref} className="relative h-screen overflow-hidden bg-background">
-        {/* background image */}
+        {/* background video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        >
+          <source src="https://res.cloudinary.com/dfonotyfb/video/upload/v1775585556/dds3_1_rqhg7x.mp4" type="video/mp4" />
+        </video>
         <div aria-hidden className="absolute inset-0 z-0">
-          <img
-            src={heroBg}
-            alt=""
-            width={1920}
-            height={1080}
-            className="h-full w-full object-cover scale-105 opacity-90"
-          />
           {/* tonal wash to match palette */}
+          <div className="absolute inset-0 bg-black/50" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_35%,oklch(0.21_0.008_165/0.85)_100%)]" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/20 to-background" />
           {/* sage scanlines */}
