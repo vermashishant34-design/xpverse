@@ -69,13 +69,22 @@ function Quests() {
                     <span>+{q.xp} XP</span><span>+{q.coins}¤</span>
                   </div>
                 </div>
-                <button
-                  disabled={q.done}
-                  onClick={(e) => onComplete(q.id, e)}
-                  className="shrink-0 rounded-full glass-strong px-4 py-2 font-mono text-xs uppercase tracking-widest hover:bg-foreground hover:text-background transition disabled:opacity-50"
-                >
-                  {q.done ? "✓ Done" : "Complete"}
-                </button>
+                <div className="flex shrink-0 gap-2">
+                  <button
+                    disabled={q.done}
+                    onClick={(e) => onComplete(q.id, e)}
+                    className="rounded-full glass-strong px-4 py-2 font-mono text-xs uppercase tracking-widest hover:bg-foreground hover:text-background transition disabled:opacity-50"
+                  >
+                    {q.done ? "✓ Done" : "Complete"}
+                  </button>
+                  <button
+                    onClick={() => { playerStore.deleteQuest(q.id); toast("Quest removed"); }}
+                    className="rounded-full glass-strong px-3 py-2 font-mono text-xs uppercase tracking-widest hover:bg-destructive/30 hover:text-destructive transition"
+                    aria-label="Delete quest"
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
             </motion.div>
           ))}
