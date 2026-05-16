@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { usePlayer, xpForLevel } from "@/store/player";
 import { XPBar } from "@/components/XPBar";
+import { ScreenTimePanel } from "@/components/ScreenTimePanel";
+import { NotificationsFeed } from "@/components/NotificationsFeed";
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — XPVerse" }] }),
@@ -13,9 +15,9 @@ function Dashboard() {
   const completed = p.quests.filter(q => q.done).length;
   const stats = [
     { label: "Level", value: p.level, sub: `${p.xp} / ${xpForLevel(p.level)} XP` },
+    { label: "Streak", value: `${p.streak}🔥`, sub: p.streak > 0 ? "Keep it alive" : "Start today" },
     { label: "Coins", value: `${p.coins}¤`, sub: "Currency earned" },
-    { label: "Quests", value: `${completed}/${p.quests.length}`, sub: "Completed today" },
-    { label: "Class", value: p.charClass, sub: p.username },
+    { label: "Quests", value: `${completed}/${p.quests.length}`, sub: "Completed" },
   ];
   return (
     <div className="space-y-12">
@@ -55,7 +57,7 @@ function Dashboard() {
                 <span className="font-mono text-xs text-neon-cyan">+{q.xp} XP</span>
               </li>
             ))}
-            {p.quests.every(q => q.done) && <li className="text-sm text-muted-foreground">All quests cleared. Legendary.</li>}
+            {p.quests.filter(q => !q.done).length === 0 && <li className="text-sm text-muted-foreground">All quests cleared. Legendary.</li>}
           </ul>
         </div>
         <div className="rounded-2xl glass p-6">
@@ -67,13 +69,18 @@ function Dashboard() {
                   <span>{k}</span><span className="text-muted-foreground">{v}</span>
                 </div>
                 <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-secondary/60">
-                  <motion.div initial={{ width: 0 }} animate={{ width: `${Math.min(100, v * 8)}%` }}
+                  <motion.div initial={{ width: 0 }} animate={{ width: `${Math.min(100, v * 5)}%` }}
                     transition={{ duration: 0.8 }} className="h-full animate-aurora" />
                 </div>
               </div>
             ))}
           </div>
         </div>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <ScreenTimePanel />
+        <NotificationsFeed />
       </div>
     </div>
   );

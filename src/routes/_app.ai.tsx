@@ -34,13 +34,21 @@ const TEMPLATES: Record<string, { title: string; skill: typeof SKILLS[number] }[
   ],
 };
 
-const QUOTES = [
-  "Discipline equals freedom. Push.",
-  "Tomorrow is built today.",
-  "You don't rise to your goals. You fall to your systems.",
-  "The grind is the gift.",
-  "Become unrecognizable.",
-];
+function coachMessage(p: {
+  username: string; level: number; streak: number;
+  quests: { done: boolean }[];
+  skills: Record<string, number>;
+}) {
+  const done = p.quests.filter(q => q.done).length;
+  const open = p.quests.length - done;
+  const topSkill = Object.entries(p.skills).sort((a, b) => b[1] - a[1])[0];
+  if (done === 0 && open > 0) return `${p.username}, you have ${open} quest${open === 1 ? "" : "s"} waiting. Strike first.`;
+  if (p.streak >= 7) return `${p.streak}-day streak, ${p.username}. You're operating above the line.`;
+  if (p.streak >= 3) return `Momentum building, ${p.username}. ${p.streak} days locked in.`;
+  if (p.level >= 10) return `Lv ${p.level} — your ${topSkill[0]} is your edge. Lean into it.`;
+  if (done >= 3) return `Great progress today, ${p.username}. ${done} quests cleared.`;
+  return `Welcome, ${p.username}. Build the version of you that wins tomorrow.`;
+}
 
 export const Route = createFileRoute("/_app/ai")({
   head: () => ({ meta: [{ title: "AI Coach — XPVerse" }] }),
@@ -50,15 +58,14 @@ export const Route = createFileRoute("/_app/ai")({
 function AI() {
   const p = usePlayer();
   const [generated, setGenerated] = useState<{ title: string; skill: typeof SKILLS[number] }[]>([]);
-  const [quote, setQuote] = useState(QUOTES[0]);
   const [loading, setLoading] = useState(false);
+  const message = coachMessage(p);
 
   const generate = () => {
     setLoading(true);
     setTimeout(() => {
       const pool = TEMPLATES[p.charClass] || TEMPLATES.Hacker;
       setGenerated([...pool].sort(() => Math.random() - 0.5).slice(0, 3));
-      setQuote(QUOTES[Math.floor(Math.random() * QUOTES.length)]);
       setLoading(false);
     }, 700);
   };
@@ -81,10 +88,10 @@ function AI() {
       <motion.div className="relative overflow-hidden rounded-3xl glass p-10">
         <div className="absolute inset-0 animate-aurora opacity-10" />
         <div className="relative">
-          <p className="font-mono text-xs uppercase tracking-widest text-neon-cyan">Dispatch</p>
-          <motion.p key={quote}
+          <p className="font-mono text-xs uppercase tracking-widest text-neon-cyan">Dispatch · Lv {p.level} · {p.streak}🔥</p>
+          <motion.p key={message}
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="mt-3 font-display text-3xl md:text-4xl font-semibold text-balance">"{quote}"</motion.p>
+            className="mt-3 font-display text-3xl md:text-4xl font-semibold text-balance">"{message}"</motion.p>
         </div>
       </motion.div>
 
