@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { ParticleField } from "@/components/ParticleField";
 import { MouseGlow } from "@/components/MouseGlow";
+import { AuthDialog } from "@/components/AuthDialog";
+import { useAuth } from "@/store/auth";
 import heroBg from "@/assets/hero-bg.jpg";
 
 export const Route = createFileRoute("/")({
@@ -20,6 +22,8 @@ function Landing() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const [authOpen, setAuthOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   return (
     <div className="relative noise">
@@ -66,7 +70,18 @@ function Landing() {
             <a href="#system" className="hover:text-foreground transition">System</a>
             <a href="#ai" className="hover:text-foreground transition">AI</a>
           </div>
-          <Link to="/character" className="rounded-full border border-foreground/20 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.3em] hover:bg-foreground/5 transition">● Enter</Link>
+          {isAuthenticated ? (
+            <Link to="/dashboard" className="rounded-full border border-foreground/20 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.3em] hover:bg-foreground/5 transition">
+              ● Dashboard
+            </Link>
+          ) : (
+            <button
+              onClick={() => setAuthOpen(true)}
+              className="rounded-full border border-foreground/20 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.3em] hover:bg-foreground/5 transition"
+            >
+              ● Enter
+            </button>
+          )}
         </nav>
 
         {/* faint particle haze */}
@@ -99,9 +114,18 @@ function Landing() {
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, duration: 0.8 }}
             className="mt-12"
           >
-            <Link to="/character" className="inline-flex items-center gap-3 rounded-full border border-foreground/30 px-6 py-3 font-mono text-[11px] uppercase tracking-[0.4em] hover:bg-foreground/5 transition">
-              <span className="text-accent animate-pulse">▸</span> Start
-            </Link>
+            {isAuthenticated ? (
+              <Link to="/dashboard" className="inline-flex items-center gap-3 rounded-full border border-foreground/30 px-6 py-3 font-mono text-[11px] uppercase tracking-[0.4em] hover:bg-foreground/5 transition">
+                <span className="text-accent animate-pulse">▸</span> Go to Dashboard
+              </Link>
+            ) : (
+              <button
+                onClick={() => setAuthOpen(true)}
+                className="inline-flex items-center gap-3 rounded-full border border-foreground/30 px-6 py-3 font-mono text-[11px] uppercase tracking-[0.4em] hover:bg-foreground/5 transition"
+              >
+                <span className="text-accent animate-pulse">▸</span> Start
+              </button>
+            )}
           </motion.div>
         </motion.div>
       </section>
@@ -242,23 +266,69 @@ function Landing() {
           >
             The next level <br /><span className="gradient-text">is one quest away.</span>
           </motion.h2>
-          <Link to="/character"
-            className="mt-12 inline-block rounded-full bg-foreground px-10 py-5 font-mono text-xs uppercase tracking-[0.3em] text-background hover:scale-105 transition">
-            Begin →
-          </Link>
+          {isAuthenticated ? (
+            <Link to="/dashboard"
+              className="mt-12 inline-block rounded-full bg-foreground px-10 py-5 font-mono text-xs uppercase tracking-[0.3em] text-background hover:scale-105 transition">
+              Go to Dashboard →
+            </Link>
+          ) : (
+            <button
+              onClick={() => setAuthOpen(true)}
+              className="mt-12 inline-block rounded-full bg-foreground px-10 py-5 font-mono text-xs uppercase tracking-[0.3em] text-background hover:scale-105 transition">
+              Begin →
+            </button>
+          )}
         </div>
       </section>
 
-      <footer className="border-t border-white/5 px-6 py-10">
-        <div className="mx-auto flex max-w-7xl flex-col md:flex-row items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-          <div>© 2026 XPVERSE — Reality, gamified.</div>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-foreground">Twitter</a>
-            <a href="#" className="hover:text-foreground">Discord</a>
-            <a href="#" className="hover:text-foreground">Github</a>
+      <footer className="border-t border-white/5 px-6 py-16">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-12 md:grid-cols-4">
+            <div className="md:col-span-1">
+              <div className="flex items-center gap-2 font-display text-lg font-bold">
+                <span className="grid h-8 w-8 place-items-center rounded-md border border-foreground/20 text-foreground">X</span>
+                XPVERSE
+              </div>
+              <p className="mt-4 text-sm text-muted-foreground">
+                Turn your life into a game. Quests, XP, skills, leaderboards.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-mono text-xs uppercase tracking-[0.3em] text-neon-cyan mb-4">About</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition">Our Mission</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition">How It Works</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition">FAQ</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-mono text-xs uppercase tracking-[0.3em] text-neon-cyan mb-4">Contact</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition">Email Us</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition">Support</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition">Feedback</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-mono text-xs uppercase tracking-[0.3em] text-neon-cyan mb-4">Legal</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition">Privacy Policy</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition">Terms of Service</a></li>
+                <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition">Cookie Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <div>© 2026 XPVERSE — Reality, gamified.</div>
+            <div className="flex gap-6">
+              <a href="#" className="hover:text-foreground transition">Twitter</a>
+              <a href="#" className="hover:text-foreground transition">Discord</a>
+              <a href="#" className="hover:text-foreground transition">Github</a>
+            </div>
           </div>
         </div>
       </footer>
+      <AuthDialog open={authOpen} onOpenChange={setAuthOpen} />
     </div>
   );
 }

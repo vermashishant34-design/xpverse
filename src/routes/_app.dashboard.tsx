@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { usePlayer, xpForLevel } from "@/store/player";
 import { XPBar } from "@/components/XPBar";
-import { ScreenTimePanel } from "@/components/ScreenTimePanel";
 import { NotificationsFeed } from "@/components/NotificationsFeed";
 
 export const Route = createFileRoute("/_app/dashboard")({
@@ -78,8 +77,7 @@ function Dashboard() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <ScreenTimePanel />
+      <div className="grid gap-6 lg:grid-cols-1">
         <NotificationsFeed />
       </div>
     </div>

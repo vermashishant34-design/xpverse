@@ -3,13 +3,13 @@ import { motion } from "framer-motion";
 import { usePlayer } from "@/store/player";
 
 const FAKE = [
-  { name: "Zenith", lv: 47, xp: 18420, cls: "Monk" },
-  { name: "Vex", lv: 42, xp: 16100, cls: "Hacker" },
-  { name: "Nova", lv: 38, xp: 14200, cls: "Entrepreneur" },
-  { name: "Kairo", lv: 33, xp: 11800, cls: "Warrior" },
-  { name: "Lyra", lv: 29, xp: 9700, cls: "Developer" },
-  { name: "Ash", lv: 24, xp: 7800, cls: "Hacker" },
-  { name: "Mira", lv: 21, xp: 6500, cls: "Monk" },
+  { name: "Abhoshak", lv: 47, xp: 18420, cls: "Monk" },
+  { name: "Vikram", lv: 42, xp: 16100, cls: "Hacker" },
+  { name: "Arjun", lv: 38, xp: 14200, cls: "Entrepreneur" },
+  { name: "Karan", lv: 33, xp: 11800, cls: "Warrior" },
+  { name: "Neha", lv: 29, xp: 9700, cls: "Developer" },
+  { name: "Priya", lv: 24, xp: 7800, cls: "Hacker" },
+  { name: "Raj", lv: 21, xp: 6500, cls: "Monk" },
 ];
 
 export const Route = createFileRoute("/_app/leaderboard")({

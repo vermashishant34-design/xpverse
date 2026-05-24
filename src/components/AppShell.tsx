@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MouseGlow } from "./MouseGlow";
 import { ParticleField } from "./ParticleField";
 import { usePlayer } from "@/store/player";
+import { useAuth } from "@/store/auth";
+import { Button } from "./ui/button";
 
 const NAV = [
   { to: "/", label: "Home" },
@@ -11,12 +13,12 @@ const NAV = [
   { to: "/skills", label: "Skills" },
   { to: "/achievements", label: "Achievements" },
   { to: "/leaderboard", label: "Leaderboard" },
-  { to: "/ai", label: "AI Coach" },
 ] as const;
 
 export function AppShell() {
   const loc = useLocation();
   const p = usePlayer();
+  const { logout, isAuthenticated } = useAuth();
   return (
     <div className="relative min-h-screen noise grid-bg">
       <MouseGlow />
@@ -40,13 +42,25 @@ export function AppShell() {
               );
             })}
           </nav>
-          <Link to="/profile" className="flex items-center gap-3 rounded-full glass px-3 py-1.5">
-            <span className="grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br from-primary to-accent text-background font-bold text-sm">{p.avatar}</span>
-            <div className="hidden sm:block">
-              <div className="text-xs font-mono">{p.username}</div>
-              <div className="text-[10px] text-muted-foreground font-mono">Lv {p.level} · {p.coins}¤</div>
-            </div>
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link to="/profile" className="flex items-center gap-3 rounded-full glass px-3 py-1.5">
+              <span className="grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br from-primary to-accent text-background font-bold text-sm">{p.avatar}</span>
+              <div className="hidden sm:block">
+                <div className="text-xs font-mono">{p.displayName || p.username} · {p.charClass}</div>
+                <div className="text-[10px] text-muted-foreground font-mono">Lv {p.level} · {p.coins}¤</div>
+              </div>
+            </Link>
+            {isAuthenticated && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={logout}
+                className="font-mono text-xs uppercase tracking-widest"
+              >
+                Logout
+              </Button>
+            )}
+          </div>
         </div>
       </header>
       <AnimatePresence mode="wait">

@@ -9,10 +9,10 @@ export function MouseGlow() {
   }, []);
   return (
     <div
-      className="pointer-events-none fixed z-[2] h-[500px] w-[500px] rounded-full opacity-40 blur-3xl transition-transform duration-100"
+      className="pointer-events-none fixed z-[2] h-[200px] w-[200px] rounded-full opacity-60 blur-3xl transition-transform duration-100"
       style={{
-        left: pos.x - 250, top: pos.y - 250,
-        background: "radial-gradient(circle, oklch(0.5 0.008 250 / 0.25), transparent 70%)",
+        left: pos.x - 100, top: pos.y - 100,
+        background: "radial-gradient(circle, oklch(0.85 0.2 190 / 0.5), transparent 70%)",
       }}
     />
   );

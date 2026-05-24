@@ -1,12 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePlayer, playerStore } from "@/store/player";
 import { toast } from "sonner";
 
 export function ScreenTimePanel() {
   const p = usePlayer();
   const today = new Date().toISOString().slice(0, 10);
-  const todays = p.screenTime.filter(s => s.date === today);
+  const todays = p.screenTime.filter((s) => s.date === today);
   const totalMin = todays.reduce((a, s) => a + s.minutes, 0);
   const weightedProd = totalMin > 0
     ? Math.round(todays.reduce((a, s) => a + s.productivity * s.minutes, 0) / totalMin)
@@ -15,6 +15,63 @@ export function ScreenTimePanel() {
   const [app, setApp] = useState("");
   const [minutes, setMinutes] = useState(30);
   const [prod, setProd] = useState(70);
+  const [activeSeconds, setActiveSeconds] = useState(0);
+  const [isActive, setIsActive] = useState(false);
+  const intervalRef = useRef<number | null>(null);
+  const lastActiveRef = useRef<number>(Date.now());
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setIsActive(false);
+      } else {
+        setIsActive(true);
+        lastActiveRef.current = Date.now();
+      }
+    };
+
+    const handleActivity = () => {
+      setIsActive(true);
+      lastActiveRef.current = Date.now();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    document.addEventListener("mousemove", handleActivity);
+    document.addEventListener("keydown", handleActivity);
+    document.addEventListener("click", handleActivity);
+
+    intervalRef.current = window.setInterval(() => {
+      if (isActive && !document.hidden) {
+        setActiveSeconds((prev) => {
+          const newSeconds = prev + 1;
+          if (newSeconds % 60 === 0) {
+            const existingXpVerse = p.screenTime.filter(s => s.date === new Date().toISOString().slice(0, 10)).find((s) => s.app === "XPVerse");
+            if (existingXpVerse) {
+              playerStore.removeScreenTime(existingXpVerse.id);
+              playerStore.logScreenTime("XPVerse", existingXpVerse.minutes + 1, 100);
+            } else {
+              playerStore.logScreenTime("XPVerse", 1, 100);
+            }
+          }
+          return newSeconds;
+        });
+      }
+    }, 1000);
+
+    if (!document.hidden) {
+      setIsActive(true);
+    }
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      document.removeEventListener("mousemove", handleActivity);
+      document.removeEventListener("keydown", handleActivity);
+      document.removeEventListener("click", handleActivity);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isActive, p.screenTime]);
 
   const add = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,12 +81,28 @@ export function ScreenTimePanel() {
     setApp("");
   };
 
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
   return (
     <div className="rounded-2xl glass p-6">
       <div className="flex items-baseline justify-between">
         <h3 className="font-display text-xl font-semibold">Screen Time</h3>
         <div className="font-mono text-xs text-muted-foreground">
           {Math.floor(totalMin / 60)}h {totalMin % 60}m · focus {weightedProd}%
+        </div>
+      </div>
+
+      <div className="mt-4 rounded-xl bg-white/5 p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="font-mono text-xs text-neon-cyan uppercase tracking-widest">Active on XPVerse</div>
+            <div className="font-display text-3xl font-bold mt-1">{formatTime(activeSeconds)}</div>
+          </div>
+          <div className={`h-3 w-3 rounded-full ${isActive ? "bg-green-500 animate-pulse" : "bg-gray-500"}`} />
         </div>
       </div>
 

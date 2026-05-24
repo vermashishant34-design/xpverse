@@ -56,22 +56,22 @@ function Skills() {
               transition={{ delay: 0.2 + i * 0.1, type: "spring" }}
               className="absolute"
               style={{
-                left: `calc(50% + ${Math.cos(angle) * 35}% - 60px)`,
-                top: `calc(50% + ${Math.sin(angle) * 35}% - 60px)`,
+                left: `calc(50% + ${Math.cos(angle) * 38}% - 80px)`,
+                top: `calc(50% + ${Math.sin(angle) * 38}% - 80px)`,
               }}
             >
-              <div className="relative grid h-[120px] w-[120px] place-items-center rounded-full glass hover:glow transition">
-                <svg className="absolute inset-0 -rotate-90" viewBox="0 0 120 120">
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="oklch(1 0 0 / 0.05)" strokeWidth="3" />
-                  <motion.circle cx="60" cy="60" r="54" fill="none" stroke="url(#g)" strokeWidth="3" strokeLinecap="round"
-                    strokeDasharray={2 * Math.PI * 54}
-                    initial={{ strokeDashoffset: 2 * Math.PI * 54 }}
-                    animate={{ strokeDashoffset: 2 * Math.PI * 54 * (1 - pct / 100) }}
+              <div className="relative grid h-[160px] w-[160px] place-items-center rounded-full glass hover:glow transition">
+                <svg className="absolute inset-0 -rotate-90" viewBox="0 0 160 160">
+                  <circle cx="80" cy="80" r="72" fill="none" stroke="oklch(1 0 0 / 0.05)" strokeWidth="3" />
+                  <motion.circle cx="80" cy="80" r="72" fill="none" stroke="url(#g)" strokeWidth="3" strokeLinecap="round"
+                    strokeDasharray={2 * Math.PI * 72}
+                    initial={{ strokeDashoffset: 2 * Math.PI * 72 }}
+                    animate={{ strokeDashoffset: 2 * Math.PI * 72 * (1 - pct / 100) }}
                     transition={{ duration: 1.2, delay: 0.4 + i * 0.1 }} />
                 </svg>
-                <div className="text-center">
-                  <div className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">{name.slice(0, 3)}</div>
-                  <div className="font-display text-2xl font-bold">{val}</div>
+                <div className="text-center px-4">
+                  <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground break-words">{name}</div>
+                  <div className="font-display text-3xl font-bold mt-1">{val}</div>
                 </div>
               </div>
             </motion.div>

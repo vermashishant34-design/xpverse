@@ -8,6 +8,7 @@ export type NotificationItem = { id: string; text: string; tone: "xp" | "level" 
 
 export type Player = {
   username: string;
+  displayName: string;
   avatar: string;
   charClass: string;
   level: number;
@@ -25,12 +26,14 @@ export type Player = {
 
 export const xpForLevel = (lvl: number) => 100 * lvl + (lvl - 1) * 50;
 
-const KEY = "xpverse:player:v2";
+const USERS_KEY = "xpverse:users:v1";
+const CURRENT_USER_KEY = "xpverse:currentUser:v1";
 
 const todayKey = () => new Date().toISOString().slice(0, 10);
 
-const initial: Player = {
-  username: "Wanderer",
+const createInitialPlayer = (username: string): Player => ({
+  username,
+  displayName: username,
   avatar: "◉",
   charClass: "Hacker",
   level: 1,
@@ -52,7 +55,7 @@ const initial: Player = {
     { id: "a3", title: "Mind Forged", desc: "Intelligence ≥ 10", rarity: "epic", unlocked: false },
     { id: "a4", title: "Ascendant", desc: "Reach level 20", rarity: "legendary", unlocked: false },
     { id: "a5", title: "Streak Keeper", desc: "Maintain a 7-day streak", rarity: "rare", unlocked: false },
-  ] as Achievement[],
+  ],
   screenTime: [
     { id: "s1", app: "VS Code", minutes: 145, productivity: 95, date: todayKey() },
     { id: "s2", app: "Notion", minutes: 62, productivity: 80, date: todayKey() },
@@ -61,19 +64,72 @@ const initial: Player = {
   ],
   notifications: [],
   created: false,
-};
+});
+
+const initial: Player = createInitialPlayer("Wanderer");
+
+interface UserData {
+  [username: string]: Player;
+}
+
+let users: UserData = (() => {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = localStorage.getItem(USERS_KEY);
+    const loadedUsers: UserData = raw ? JSON.parse(raw) : {};
+    // Migrate existing users to add displayName
+    Object.keys(loadedUsers).forEach((username) => {
+      if (!loadedUsers[username].displayName) {
+        loadedUsers[username].displayName = username;
+      }
+    });
+    // Save migrated users back to localStorage
+    if (raw) {
+      localStorage.setItem(USERS_KEY, JSON.stringify(loadedUsers));
+    }
+    return loadedUsers;
+  } catch { return {}; }
+})();
+
+let currentUsername: string | null = (() => {
+  if (typeof window === "undefined") return null;
+  try {
+    return localStorage.getItem(CURRENT_USER_KEY);
+  } catch { return null; }
+})();
 
 let state: Player = (() => {
   if (typeof window === "undefined") return initial;
-  try {
-    const raw = localStorage.getItem(KEY);
-    return raw ? { ...initial, ...JSON.parse(raw) } : initial;
-  } catch { return initial; }
+  if (currentUsername && users[currentUsername]) {
+    const user = users[currentUsername];
+    // Ensure displayName exists
+    if (!user.displayName) {
+      user.displayName = user.username;
+    }
+    return user;
+  }
+  return initial;
 })();
 
 const listeners = new Set<() => void>();
+
+const saveUsers = () => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  }
+};
+
+const saveCurrentUser = () => {
+  if (typeof window !== "undefined" && currentUsername) {
+    localStorage.setItem(CURRENT_USER_KEY, currentUsername);
+  }
+};
+
 const emit = () => {
-  if (typeof window !== "undefined") localStorage.setItem(KEY, JSON.stringify(state));
+  if (currentUsername) {
+    users[currentUsername] = state;
+    saveUsers();
+  }
   listeners.forEach(l => l());
 };
 
@@ -94,6 +150,43 @@ export const playerStore = {
   subscribe(l: () => void) { listeners.add(l); return () => listeners.delete(l); },
   get() { return state; },
   set(p: Partial<Player>) { state = { ...state, ...p }; emit(); },
+  isUsernameUnique(username: string): boolean {
+    return !users[username.trim()];
+  },
+  getAllUsernames(): string[] {
+    return Object.keys(users);
+  },
+  getUser(username: string): Player | undefined {
+    return users[username.trim()];
+  },
+  switchUser(username: string): boolean {
+    const trimmedUsername = username.trim();
+    if (!users[trimmedUsername]) return false;
+    currentUsername = trimmedUsername;
+    state = users[trimmedUsername];
+    saveCurrentUser();
+    emit();
+    return true;
+  },
+  createUser(username: string): boolean {
+    const trimmedUsername = username.trim();
+    if (users[trimmedUsername]) return false;
+    currentUsername = trimmedUsername;
+    state = createInitialPlayer(trimmedUsername);
+    users[trimmedUsername] = state;
+    saveUsers();
+    saveCurrentUser();
+    emit();
+    return true;
+  },
+  logout() {
+    currentUsername = null;
+    state = initial;
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(CURRENT_USER_KEY);
+    }
+    emit();
+  },
   completeQuest(id: string): { leveledUp: boolean; xpGained: number; skillGained: keyof Skills | null } {
     const q = state.quests.find(x => x.id === id);
     if (!q || q.done) return { leveledUp: false, xpGained: 0, skillGained: null };
@@ -143,7 +236,15 @@ export const playerStore = {
     emit();
   },
   clearNotifications() { state = { ...state, notifications: [] }; emit(); },
-  reset() { state = { ...initial, screenTime: initial.screenTime.map(s => ({ ...s, date: todayKey() })) }; emit(); },
+  reset() {
+    if (currentUsername) {
+      state = createInitialPlayer(currentUsername);
+      state.created = true;
+      users[currentUsername] = state;
+      saveUsers();
+      emit();
+    }
+  },
 };
 
 const serverSnap = () => initial;
