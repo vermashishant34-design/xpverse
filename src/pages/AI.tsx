@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { usePlayer, playerStore } from "@/store/player";
@@ -85,12 +84,7 @@ function coachMessage(p: {
   return `Welcome, ${p.username}. Build the version of you that wins tomorrow.`;
 }
 
-export const Route = createFileRoute("/_app/ai")({
-  head: () => ({ meta: [{ title: "AI Coach — XPVerse" }] }),
-  component: AI,
-});
-
-function AI() {
+export default function AI() {
   const p = usePlayer();
   const [generated, setGenerated] = useState<{ title: string; skill: typeof SKILLS[number] }[]>([]);
   const [loading, setLoading] = useState(false);

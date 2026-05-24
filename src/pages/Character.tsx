@@ -1,8 +1,8 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { playerStore, usePlayer } from "@/store/player";
 import { ParticleField } from "@/components/ParticleField";
+import { Link, useNavigate } from "react-router-dom";
 
 const CLASSES = [
   { name: "Hacker", icon: "⌬", desc: "Mind over matter. Codebreaker." },
@@ -15,12 +15,7 @@ const CLASSES = [
 
 const AVATARS = ["◉", "◆", "▲", "✦", "✧", "◐"];
 
-export const Route = createFileRoute("/character")({
-  head: () => ({ meta: [{ title: "Forge Your Identity — XPVerse" }] }),
-  component: Character,
-});
-
-function Character() {
+export default function Character() {
   const p = usePlayer();
   const nav = useNavigate();
   const [displayName, setDisplayName] = useState(p.displayName || p.username || "");
@@ -47,7 +42,7 @@ function Character() {
       charClass: cls, 
       created: true 
     });
-    nav({ to: "/dashboard" });
+    nav("/dashboard");
   };
 
   return (

@@ -1,13 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { usePlayer } from "@/store/player";
 
-export const Route = createFileRoute("/_app/skills")({
-  head: () => ({ meta: [{ title: "Skill Tree — XPVerse" }] }),
-  component: Skills,
-});
-
-function Skills() {
+export default function Skills() {
   const p = usePlayer();
   const skills = Object.entries(p.skills);
   return (

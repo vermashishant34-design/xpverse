@@ -1,15 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { usePlayer, xpForLevel } from "@/store/player";
 import { XPBar } from "@/components/XPBar";
 import { NotificationsFeed } from "@/components/NotificationsFeed";
 
-export const Route = createFileRoute("/_app/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — XPVerse" }] }),
-  component: Dashboard,
-});
-
-function Dashboard() {
+export default function Dashboard() {
   const p = usePlayer();
   const completed = p.quests.filter(q => q.done).length;
   const stats = [

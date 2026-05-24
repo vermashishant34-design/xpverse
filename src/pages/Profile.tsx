@@ -1,12 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { usePlayer, playerStore } from "@/store/player";
+import { useNavigate } from "react-router-dom";
 
-export const Route = createFileRoute("/_app/profile")({
-  head: () => ({ meta: [{ title: "Profile — XPVerse" }] }),
-  component: Profile,
-});
-
-function Profile() {
+export default function Profile() {
   const p = usePlayer();
   const nav = useNavigate();
   return (
@@ -27,7 +22,7 @@ function Profile() {
           <Row label="Coins" value={`${p.coins}¤`} />
           <Row label="Quests done" value={`${p.quests.filter(q => q.done).length}`} />
           <Row label="Achievements" value={`${p.achievements.filter(a => a.unlocked).length} / ${p.achievements.length}`} />
-          <button onClick={() => { playerStore.reset(); nav({ to: "/" }); }}
+          <button onClick={() => { playerStore.reset(); nav("/"); }}
             className="mt-4 w-full rounded-md bg-destructive/20 border border-destructive/40 py-3 font-mono text-xs uppercase tracking-widest text-destructive hover:bg-destructive/30">
             Reset progress
           </button>

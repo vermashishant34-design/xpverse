@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { usePlayer } from "@/store/player";
 
@@ -9,12 +8,7 @@ const RARITY: Record<string, string> = {
   legendary: "from-neon-cyan via-neon-purple to-accent",
 };
 
-export const Route = createFileRoute("/_app/achievements")({
-  head: () => ({ meta: [{ title: "Achievements — XPVerse" }] }),
-  component: Achievements,
-});
-
-function Achievements() {
+export default function Achievements() {
   const p = usePlayer();
   return (
     <div className="space-y-10">

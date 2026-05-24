@@ -1,8 +1,6 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/store/auth";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,7 +22,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
   useEffect(() => {
     if (isAuthenticated && open) {
       onOpenChange(false);
-      nav({ to: "/character" });
+      nav("/character");
     }
   }, [isAuthenticated, open, onOpenChange, nav]);
 

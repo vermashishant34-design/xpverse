@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { usePlayer } from "@/store/player";
 
@@ -12,13 +11,8 @@ const FAKE = [
   { name: "Raj", lv: 21, xp: 6500, cls: "Monk" },
 ];
 
-export const Route = createFileRoute("/_app/leaderboard")({
-  head: () => ({ meta: [{ title: "Leaderboard — XPVerse" }] }),
-  component: Leaderboard,
-});
-
 type Row = { name: string; lv: number; xp: number; cls: string; isMe?: boolean };
-function Leaderboard() {
+export default function Leaderboard() {
   const p = usePlayer();
   const me: Row = { name: p.username, lv: p.level, xp: p.xp + p.level * 200, cls: p.charClass, isMe: true };
   const all: Row[] = [...FAKE, me].sort((a, b) => b.xp - a.xp);

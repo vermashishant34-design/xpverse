@@ -1,4 +1,3 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { ParticleField } from "@/components/ParticleField";
@@ -6,18 +5,9 @@ import { MouseGlow } from "@/components/MouseGlow";
 import { AuthDialog } from "@/components/AuthDialog";
 import { useAuth } from "@/store/auth";
 import heroBg from "@/assets/hero-bg.jpg";
+import { Link } from "react-router-dom";
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "XPVerse — Turn Your Life Into A Game" },
-      { name: "description", content: "Cinematic gamified productivity. Quests, XP, skills, leaderboards." },
-    ],
-  }),
-  component: Landing,
-});
-
-function Landing() {
+export default function Landing() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 200]);

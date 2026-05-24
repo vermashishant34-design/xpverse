@@ -1,16 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { usePlayer, playerStore, type Skills } from "@/store/player";
 import { LevelUpOverlay } from "@/components/LevelUpOverlay";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_app/quests")({
-  head: () => ({ meta: [{ title: "Quests — XPVerse" }] }),
-  component: Quests,
-});
-
-function Quests() {
+export default function Quests() {
   const p = usePlayer();
   const [levelUp, setLevelUp] = useState(false);
   const [floats, setFloats] = useState<{ id: number; x: number; y: number; xp: number }[]>([]);

@@ -9,19 +9,11 @@ lerna-debug.log*
 
 node_modules
 dist
-dist-ssr
-.output
-.vinxi
-.tanstack/**
-.nitro
 *.local
 .env
 .env.local
 .env.*.local
-
-# Wrangler / Cloudflare
-.wrangler/
-.dev.vars
+tsconfig.tsbuildinfo
 
 # Editor directories and files
 .vscode/*
@@ -38,6 +30,4 @@ dist-ssr
 .lovable
 *.zip
 api-server.js
-src/lib/db.js
-src/lib/jwt.js
-src/models/User.js
+.wrangler
