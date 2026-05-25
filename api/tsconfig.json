@@ -8,5 +8,5 @@
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "include": ["./**/*.ts", "../server/lib/**/*.ts", "../server/models/**/*.ts"]
+  "include": ["./**/*.ts"]
 }

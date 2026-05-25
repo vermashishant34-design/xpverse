@@ -1,10 +1,10 @@
 import express from "express";
-import { connectDB } from "../lib/mongodb";
-import { loginUser, logoutUser, refreshTokens, signupUser } from "../lib/auth-service";
+import { connectDB } from "../../api/lib/mongodb";
+import { loginUser, logoutUser, refreshTokens, signupUser } from "../../api/lib/auth-service";
 
 const router = express.Router();
 
-router.use(async (_req, res, next) => {
+router.use(async (_req, _res, next) => {
   try {
     await connectDB();
     next();

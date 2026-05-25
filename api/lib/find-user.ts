@@ -1,4 +1,4 @@
-import User from "../models/User";
+import User from "./User";
 
 export function normalizeLoginId(value: string): string {
   return value.trim().toLowerCase();
@@ -8,7 +8,6 @@ function escapeRegex(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-/** Find account by email (new) or legacy username field. */
 export async function findUserByLoginId(loginId: string) {
   const id = normalizeLoginId(loginId);
   if (!id) return null;

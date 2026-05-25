@@ -1,16 +1,15 @@
 import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 
-interface IUser extends Document {
+export interface IUser extends Document {
   email?: string;
-  /** @deprecated Legacy field from username-based auth; new signups use email only. */
   username?: string;
   password: string;
   displayName?: string;
   comparePassword: (candidatePassword: string) => Promise<boolean>;
 }
 
-const userSchema: Schema = new Schema(
+const userSchema = new Schema(
   {
     email: {
       type: String,
@@ -42,11 +41,9 @@ userSchema.pre("save", async function () {
 });
 
 userSchema.methods.comparePassword = async function (candidatePassword: string) {
-  return bcrypt.compare(candidatePassword, this.password);
+  return bcrypt.compare(candidatePassword, this.password as string);
 };
 
-const User = mongoose.model<IUser>("User", userSchema);
-
-User.collection.createIndex({ email: 1 }, { unique: true, sparse: true }).catch(() => {});
+const User = mongoose.models.User ?? mongoose.model<IUser>("User", userSchema);
 
 export default User;

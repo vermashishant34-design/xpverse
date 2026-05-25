@@ -33,7 +33,8 @@ export async function runAuthHandler(
         error.message.includes("MONGODB") ||
         error.message.includes("ECONNREFUSED") ||
         error.message.includes("MongoServerError") ||
-        error.message.includes("connect")
+        error.message.includes("connect") ||
+        error.message.includes("Server selection")
       ) {
         message =
           "Cannot connect to MongoDB. Allow 0.0.0.0/0 in Atlas Network Access and verify MONGODB_URI.";

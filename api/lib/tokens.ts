@@ -14,12 +14,7 @@ function signToken(
 }
 
 export function generateAccessToken(userId: string) {
-  return signToken(
-    userId,
-    process.env.JWT_SECRET,
-    process.env.JWT_ACCESS_EXPIRES_IN,
-    "15m"
-  );
+  return signToken(userId, process.env.JWT_SECRET, process.env.JWT_ACCESS_EXPIRES_IN, "15m");
 }
 
 export function generateRefreshToken(userId: string) {

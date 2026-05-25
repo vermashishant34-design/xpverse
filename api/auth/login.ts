@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { loginUser } from "../../server/lib/auth-service";
-import { runAuthHandler } from "../../server/lib/api-handler";
+import { loginUser } from "../lib/auth-service";
+import { runAuthHandler } from "../lib/handler";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   return runAuthHandler(req, res, (body) => loginUser(body?.email, body?.password));

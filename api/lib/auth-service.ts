@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/User";
+import User from "./User";
 import { findUserByLoginId, getAccountEmail, normalizeLoginId } from "./find-user";
 import { generateAccessToken, generateRefreshToken } from "./tokens";
 
@@ -73,7 +73,6 @@ export async function loginUser(email?: string, password?: string): Promise<Auth
     return { ok: false, status: 401, body: { message: "Invalid credentials" } };
   }
 
-  // Upgrade legacy username-only accounts when user signs in with Gmail
   if (!user.email && loginId.includes("@")) {
     user.email = loginId;
     user.displayName = user.displayName || loginId.split("@")[0];
