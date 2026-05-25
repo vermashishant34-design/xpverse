@@ -20,6 +20,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
   const [signupData, setSignupData] = useState({ email: "", password: "", confirmPassword: "" });
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [localError, setLocalError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     clearError();
@@ -28,6 +29,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting || loading) return;
     setLocalError(null);
 
     if (!isValidEmail(signupData.email)) {
@@ -43,15 +45,21 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
       return;
     }
 
-    const ok = await signup(signupData.email, signupData.password);
-    if (ok) {
-      onOpenChange(false);
-      nav("/character");
+    setSubmitting(true);
+    try {
+      const ok = await signup(signupData.email, signupData.password);
+      if (ok) {
+        onOpenChange(false);
+        nav("/character");
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting || loading) return;
     setLocalError(null);
 
     if (!loginData.email.trim() || !loginData.password) {
@@ -59,10 +67,15 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
       return;
     }
 
-    const ok = await login(loginData.email, loginData.password);
-    if (ok) {
-      onOpenChange(false);
-      nav("/character");
+    setSubmitting(true);
+    try {
+      const ok = await login(loginData.email, loginData.password);
+      if (ok) {
+        onOpenChange(false);
+        nav("/character");
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -143,9 +156,9 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
                 <Button
                   type="submit"
                   className="w-full bg-neon-cyan hover:bg-neon-cyan/90 text-background font-mono uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,255,0.3)]"
-                  disabled={loading}
+                  disabled={loading || submitting}
                 >
-                  {loading ? "Logging in..." : "Login"}
+                  {loading || submitting ? "Logging in..." : "Login"}
                 </Button>
               </form>
             </div>
@@ -202,9 +215,9 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
                 <Button
                   type="submit"
                   className="w-full bg-neon-purple hover:bg-neon-purple/90 text-background font-mono uppercase tracking-widest shadow-[0_0_20px_rgba(168,85,247,0.3)]"
-                  disabled={loading || signupData.password !== signupData.confirmPassword}
+                  disabled={loading || submitting || signupData.password !== signupData.confirmPassword}
                 >
-                  {loading ? "Creating account..." : "Sign Up"}
+                  {loading || submitting ? "Creating account..." : "Sign Up"}
                 </Button>
               </form>
             </div>

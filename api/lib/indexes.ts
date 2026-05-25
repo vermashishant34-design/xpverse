@@ -1,11 +1,11 @@
 import User from "./User";
 
-let indexesReady = false;
+declare global {
+  // eslint-disable-next-line no-var
+  var userIndexSetupPromise: Promise<void> | undefined;
+}
 
-/** Fix legacy Atlas indexes (e.g. unique username) that block new email signups. */
-export async function ensureUserIndexes() {
-  if (indexesReady) return;
-
+async function setupUserIndexes() {
   const collection = User.collection;
   const indexes = await collection.indexes();
 
@@ -15,7 +15,7 @@ export async function ensureUserIndexes() {
 
     const keys = index.key ?? {};
     const isUsernameIndex = "username" in keys;
-    const isLegacyEmailIndex = "email" in keys && !index.sparse;
+    const isLegacyEmailIndex = "email" in keys && index.name !== "email_1_sparse_unique";
 
     if (isUsernameIndex || isLegacyEmailIndex) {
       try {
@@ -27,7 +27,26 @@ export async function ensureUserIndexes() {
     }
   }
 
-  await collection.createIndex({ email: 1 }, { unique: true, sparse: true, name: "email_1_sparse_unique" });
+  try {
+    await collection.createIndex(
+      { email: 1 },
+      { unique: true, sparse: true, name: "email_1_sparse_unique" }
+    );
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "";
+    if (!msg.includes("already exists") && !msg.includes("IndexOptionsConflict")) {
+      throw err;
+    }
+  }
+}
 
-  indexesReady = true;
+/** Fix legacy Atlas indexes (e.g. unique username) that block new email signups. */
+export async function ensureUserIndexes() {
+  if (!global.userIndexSetupPromise) {
+    global.userIndexSetupPromise = setupUserIndexes().catch((err) => {
+      global.userIndexSetupPromise = undefined;
+      throw err;
+    });
+  }
+  await global.userIndexSetupPromise;
 }

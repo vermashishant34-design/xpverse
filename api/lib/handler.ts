@@ -23,7 +23,7 @@ export async function runAuthHandler(
     return res.status(result.status).json(result.body);
   } catch (error) {
     console.error("Auth API error:", error);
-    let message = "Internal server error";
+    let message = "Something went wrong. Please wait a moment and try again.";
     let status = 500;
 
     if (error instanceof Error) {
@@ -39,12 +39,20 @@ export async function runAuthHandler(
         message =
           "Cannot connect to MongoDB. Allow 0.0.0.0/0 in Atlas Network Access and verify MONGODB_URI.";
         status = 503;
-      } else if (error.message.includes("E11000")) {
-        const keyMatch = error.message.match(/index:\s*(\S+)/);
-        message = keyMatch?.[1]?.includes("email")
+      } else if (
+        error.message.includes("E11000") ||
+        error.message.includes("duplicate key")
+      ) {
+        message = error.message.toLowerCase().includes("email")
           ? "An account with this email already exists"
-          : "Could not create account due to a database constraint. Please try again.";
+          : "An account with this email already exists";
         status = 400;
+      } else if (
+        error.message.includes("Index") ||
+        error.message.includes("index")
+      ) {
+        message = "Database is updating indexes. Please try signup again in 10 seconds.";
+        status = 503;
       }
     }
 
