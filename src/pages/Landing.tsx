@@ -1,11 +1,11 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ParticleField } from "@/components/ParticleField";
 import { MouseGlow } from "@/components/MouseGlow";
 import { AuthDialog } from "@/components/AuthDialog";
 import { useAuth } from "@/store/auth";
 import heroBg from "@/assets/hero-bg.jpg";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Landing() {
   const ref = useRef<HTMLDivElement>(null);
@@ -14,6 +14,14 @@ export default function Landing() {
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
   const [authOpen, setAuthOpen] = useState(false);
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+    const state = location.state as { authRequired?: boolean } | null;
+    if (state?.authRequired) {
+      setAuthOpen(true);
+    }
+  }, [location.state]);
 
   return (
     <div className="relative noise">

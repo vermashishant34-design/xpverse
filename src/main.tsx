@@ -15,6 +15,7 @@ import Profile from "./pages/Profile";
 import Quests from "./pages/Quests";
 import Skills from "./pages/Skills";
 import { AppShell } from "@/components/AppShell";
+import { RequireAuth } from "@/components/RequireAuth";
 
 const queryClient = new QueryClient();
 
@@ -25,10 +26,18 @@ const router = createBrowserRouter([
   },
   {
     path: "/character",
-    element: <Character />,
+    element: (
+      <RequireAuth>
+        <Character />
+      </RequireAuth>
+    ),
   },
   {
-    element: <AppShell />,
+    element: (
+      <RequireAuth>
+        <AppShell />
+      </RequireAuth>
+    ),
     children: [
       {
         path: "/dashboard",

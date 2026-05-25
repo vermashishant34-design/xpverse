@@ -2,18 +2,25 @@ import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 
 interface IUser extends Document {
-  email: string;
+  email?: string;
+  /** @deprecated Legacy field from username-based auth; new signups use email only. */
+  username?: string;
   password: string;
   displayName?: string;
+  comparePassword: (candidatePassword: string) => Promise<boolean>;
 }
 
 const userSchema: Schema = new Schema(
   {
     email: {
       type: String,
-      required: true,
       unique: true,
+      sparse: true,
       lowercase: true,
+      trim: true,
+    },
+    username: {
+      type: String,
       trim: true,
     },
     password: {
@@ -38,4 +45,8 @@ userSchema.methods.comparePassword = async function (candidatePassword: string) 
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-export default mongoose.model<IUser>("User", userSchema);
+const User = mongoose.model<IUser>("User", userSchema);
+
+User.collection.createIndex({ email: 1 }, { unique: true, sparse: true }).catch(() => {});
+
+export default User;

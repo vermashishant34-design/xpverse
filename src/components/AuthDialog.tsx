@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { isValidEmail } from "@/lib/auth-types";
 
 interface AuthDialogProps {
   open: boolean;
@@ -13,35 +14,59 @@ interface AuthDialogProps {
 }
 
 export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
-  const { signup, login, loading, error, isAuthenticated, clearError } = useAuth();
+  const { signup, login, loading, error, clearError } = useAuth();
   const nav = useNavigate();
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
   const [signupData, setSignupData] = useState({ email: "", password: "", confirmPassword: "" });
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-
-  useEffect(() => {
-    if (isAuthenticated && open) {
-      onOpenChange(false);
-      nav("/character");
-    }
-  }, [isAuthenticated, open, onOpenChange, nav]);
+  const [localError, setLocalError] = useState<string | null>(null);
 
   useEffect(() => {
     clearError();
-  }, [open, clearError]);
+    setLocalError(null);
+  }, [open, clearError, activeTab]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (signupData.password !== signupData.confirmPassword) {
+    setLocalError(null);
+
+    if (!isValidEmail(signupData.email)) {
+      setLocalError("Enter a valid email (e.g. you@gmail.com)");
       return;
     }
-    await signup(signupData.email, signupData.password);
+    if (signupData.password.length < 6) {
+      setLocalError("Password must be at least 6 characters");
+      return;
+    }
+    if (signupData.password !== signupData.confirmPassword) {
+      setLocalError("Passwords do not match");
+      return;
+    }
+
+    const ok = await signup(signupData.email, signupData.password);
+    if (ok) {
+      onOpenChange(false);
+      nav("/character");
+    }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(loginData.email, loginData.password);
+    setLocalError(null);
+
+    if (!loginData.email.trim() || !loginData.password) {
+      setLocalError("Email and password are required");
+      return;
+    }
+
+    const ok = await login(loginData.email, loginData.password);
+    if (ok) {
+      onOpenChange(false);
+      nav("/character");
+    }
   };
+
+  const displayError = localError || error;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -51,13 +76,13 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
             Welcome to XPVERSE
           </DialogTitle>
           <DialogDescription className="text-center text-neon-cyan">
-            Start your journey to level up your life!
+            Sign up with Gmail or email — saved securely in MongoDB.
           </DialogDescription>
         </DialogHeader>
 
-        {error && (
+        {displayError && (
           <Alert variant="destructive" className="border-red-500/50 bg-red-500/10">
-            <AlertDescription className="text-red-300 font-mono">{error}</AlertDescription>
+            <AlertDescription className="text-red-300 font-mono">{displayError}</AlertDescription>
           </Alert>
         )}
 
@@ -95,7 +120,8 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
                   <Input
                     id="login-email"
                     type="email"
-                    placeholder="Enter your email"
+                    autoComplete="username"
+                    placeholder="you@gmail.com"
                     value={loginData.email}
                     onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                     required
@@ -114,9 +140,9 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
                     className="border-white/20 focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan/50 bg-background/50"
                   />
                 </div>
-                <Button 
-                  type="submit" 
-                  className="w-full bg-neon-cyan hover:bg-neon-cyan/90 text-background font-mono uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,255,0.3)]" 
+                <Button
+                  type="submit"
+                  className="w-full bg-neon-cyan hover:bg-neon-cyan/90 text-background font-mono uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,255,0.3)]"
                   disabled={loading}
                 >
                   {loading ? "Logging in..." : "Login"}
@@ -129,11 +155,12 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
             <div className="mt-4">
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email" className="text-neon-purple">Email</Label>
+                  <Label htmlFor="signup-email" className="text-neon-purple">Email (Gmail)</Label>
                   <Input
                     id="signup-email"
                     type="email"
-                    placeholder="Enter your email"
+                    autoComplete="email"
+                    placeholder="you@gmail.com"
                     value={signupData.email}
                     onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
                     required
@@ -145,10 +172,11 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
                   <Input
                     id="signup-password"
                     type="password"
-                    placeholder="Create a password"
+                    placeholder="At least 6 characters"
                     value={signupData.password}
                     onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
                     required
+                    minLength={6}
                     className="border-white/20 focus:border-neon-purple focus:ring-1 focus:ring-neon-purple/50 bg-background/50"
                   />
                 </div>
@@ -157,21 +185,23 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
                   <Input
                     id="signup-confirm-password"
                     type="password"
-                    placeholder="Confirm your password"
+                    placeholder="Confirm password"
                     value={signupData.confirmPassword}
                     onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
                     required
                     className={`border-white/20 focus:border-neon-purple focus:ring-1 focus:ring-neon-purple/50 bg-background/50 ${
-                      signupData.confirmPassword && signupData.password !== signupData.confirmPassword ? "border-red-500 focus:border-red-500" : ""
+                      signupData.confirmPassword && signupData.password !== signupData.confirmPassword
+                        ? "border-red-500 focus:border-red-500"
+                        : ""
                     }`}
                   />
                   {signupData.confirmPassword && signupData.password !== signupData.confirmPassword && (
                     <p className="text-red-400 text-xs font-mono">Passwords do not match</p>
                   )}
                 </div>
-                <Button 
-                  type="submit" 
-                  className="w-full bg-neon-purple hover:bg-neon-purple/90 text-background font-mono uppercase tracking-widest shadow-[0_0_20px_rgba(168,85,247,0.3)]" 
+                <Button
+                  type="submit"
+                  className="w-full bg-neon-purple hover:bg-neon-purple/90 text-background font-mono uppercase tracking-widest shadow-[0_0_20px_rgba(168,85,247,0.3)]"
                   disabled={loading || signupData.password !== signupData.confirmPassword}
                 >
                   {loading ? "Creating account..." : "Sign Up"}
