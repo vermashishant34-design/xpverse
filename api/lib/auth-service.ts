@@ -30,9 +30,9 @@ export async function signupUser(email?: string, password?: string): Promise<Aut
     return { ok: false, status: 400, body: { message: "Please sign up with a valid email address" } };
   }
 
-  const existingUser = await User.findOne({ email: normalizedEmail });
-  if (existingUser) {
-    return { ok: false, status: 400, body: { message: "User already exists with this email" } };
+  const emailTaken = await User.exists({ email: normalizedEmail });
+  if (emailTaken) {
+    return { ok: false, status: 400, body: { message: "An account with this email already exists" } };
   }
 
   const user = new User({
@@ -40,7 +40,23 @@ export async function signupUser(email?: string, password?: string): Promise<Aut
     password,
     displayName: normalizedEmail.split("@")[0],
   });
-  await user.save();
+
+  try {
+    await user.save();
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "";
+    if (message.includes("E11000")) {
+      return {
+        ok: false,
+        status: 400,
+        body: {
+          message:
+            "Could not create account (database index conflict). Try again in a minute or contact support.",
+        },
+      };
+    }
+    throw err;
+  }
 
   const accessToken = generateAccessToken(user._id.toString());
   const refreshToken = generateRefreshToken(user._id.toString());

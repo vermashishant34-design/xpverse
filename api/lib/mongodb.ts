@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { ensureUserIndexes } from "./indexes";
 
 declare global {
   // eslint-disable-next-line no-var
@@ -26,5 +27,6 @@ export async function connectDB(): Promise<typeof mongoose> {
   }
 
   cached.conn = await cached.promise;
+  await ensureUserIndexes();
   return cached.conn;
 }

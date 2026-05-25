@@ -40,7 +40,10 @@ export async function runAuthHandler(
           "Cannot connect to MongoDB. Allow 0.0.0.0/0 in Atlas Network Access and verify MONGODB_URI.";
         status = 503;
       } else if (error.message.includes("E11000")) {
-        message = "User already exists with this email";
+        const keyMatch = error.message.match(/index:\s*(\S+)/);
+        message = keyMatch?.[1]?.includes("email")
+          ? "An account with this email already exists"
+          : "Could not create account due to a database constraint. Please try again.";
         status = 400;
       }
     }
