@@ -35,12 +35,12 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
     if (signupData.password !== signupData.confirmPassword) {
       return;
     }
-    await signup(signupData.email, signupData.password || undefined);
+    await signup(signupData.email, signupData.password);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(loginData.email, loginData.password || undefined);
+    await login(loginData.email, loginData.password);
   };
 
   return (
