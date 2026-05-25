@@ -1,6 +1,7 @@
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { refreshTokens } from "../../server/lib/auth-service";
-import { runAuthHandler, type ApiRequest, type ApiResponse } from "../../server/lib/api-handler";
+import { runAuthHandler } from "../../server/lib/api-handler";
 
-export default async function handler(req: ApiRequest, res: ApiResponse) {
-  return runAuthHandler(req, res, () => refreshTokens(req.body?.refreshToken));
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  return runAuthHandler(req, res, (body) => refreshTokens(body?.refreshToken));
 }

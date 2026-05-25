@@ -1,32 +1,25 @@
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { connectDB } from "./mongodb";
 import type { AuthResult } from "./auth-service";
 
-export type ApiRequest = {
-  method?: string;
-  body?: { email?: string; password?: string; refreshToken?: string };
-};
-
-export type ApiResponse = {
-  status: (code: number) => ApiResponse;
-  json: (body: unknown) => void;
-};
-
-export function methodNotAllowed(res: ApiResponse) {
+export function methodNotAllowed(res: VercelResponse) {
   return res.status(405).json({ message: "Method not allowed" });
 }
 
 export async function runAuthHandler(
-  req: ApiRequest,
-  res: ApiResponse,
-  handler: () => Promise<AuthResult>
+  req: VercelRequest,
+  res: VercelResponse,
+  handler: (body: VercelRequest["body"]) => Promise<AuthResult>
 ) {
   if (req.method !== "POST") {
     return methodNotAllowed(res);
   }
 
+  const body = req.body as { email?: string; password?: string; refreshToken?: string } | undefined;
+
   try {
     await connectDB();
-    const result = await handler();
+    const result = await handler(body);
     return res.status(result.status).json(result.body);
   } catch (error) {
     console.error("Auth API error:", error);

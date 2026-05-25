@@ -24,13 +24,25 @@ export async function request<T>(endpoint: string, options: RequestInit = {}): P
   }
 
   const contentType = response.headers.get("content-type") || "";
-  if (!contentType.includes("application/json")) {
+  const isJson = contentType.includes("application/json");
+
+  let data: unknown = null;
+  if (isJson) {
+    data = await response.json().catch(() => null);
+  } else {
+    const text = await response.text().catch(() => "");
+    if (!response.ok) {
+      if (text.includes("FUNCTION_INVOCATION_FAILED")) {
+        throw new Error(
+          "API server crashed on Vercel. Redeploy after the latest fix, and set MONGODB_URI + JWT secrets."
+        );
+      }
+      throw new Error(text.slice(0, 200) || "Request failed");
+    }
     throw new Error(
-      "Server returned an invalid response. Deploy the api/ folder to Vercel and set environment variables."
+      "Server returned an invalid response. Check Vercel deployment logs for /api/auth/signup."
     );
   }
-
-  const data = await response.json().catch(() => null);
 
   if (!response.ok) {
     const message =
