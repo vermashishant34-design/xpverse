@@ -69,19 +69,19 @@ const TEMPLATES: Record<string, { title: string; skill: typeof SKILLS[number] }[
 };
 
 function coachMessage(p: {
-  username: string; level: number; streak: number;
+  displayName: string; level: number; streak: number;
   quests: { done: boolean }[];
   skills: Record<string, number>;
 }) {
   const done = p.quests.filter(q => q.done).length;
   const open = p.quests.length - done;
   const topSkill = Object.entries(p.skills).sort((a, b) => b[1] - a[1])[0];
-  if (done === 0 && open > 0) return `${p.username}, you have ${open} quest${open === 1 ? "" : "s"} waiting. Strike first.`;
-  if (p.streak >= 7) return `${p.streak}-day streak, ${p.username}. You're operating above the line.`;
-  if (p.streak >= 3) return `Momentum building, ${p.username}. ${p.streak} days locked in.`;
+  if (done === 0 && open > 0) return `${p.displayName}, you have ${open} quest${open === 1 ? "" : "s"} waiting. Strike first.`;
+  if (p.streak >= 7) return `${p.streak}-day streak, ${p.displayName}. You're operating above the line.`;
+  if (p.streak >= 3) return `Momentum building, ${p.displayName}. ${p.streak} days locked in.`;
   if (p.level >= 10) return `Lv ${p.level} — your ${topSkill[0]} is your edge. Lean into it.`;
-  if (done >= 3) return `Great progress today, ${p.username}. ${done} quests cleared.`;
-  return `Welcome, ${p.username}. Build the version of you that wins tomorrow.`;
+  if (done >= 3) return `Great progress today, ${p.displayName}. ${done} quests cleared.`;
+  return `Welcome, ${p.displayName}. Build the version of you that wins tomorrow.`;
 }
 
 export default function AI() {

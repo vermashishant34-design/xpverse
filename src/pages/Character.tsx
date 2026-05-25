@@ -3,6 +3,7 @@ import { useState } from "react";
 import { playerStore, usePlayer } from "@/store/player";
 import { ParticleField } from "@/components/ParticleField";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/store/auth";
 
 const CLASSES = [
   { name: "Hacker", icon: "⌬", desc: "Mind over matter. Codebreaker." },
@@ -17,8 +18,9 @@ const AVATARS = ["◉", "◆", "▲", "✦", "✧", "◐"];
 
 export default function Character() {
   const p = usePlayer();
+  const { user } = useAuth();
   const nav = useNavigate();
-  const [displayName, setDisplayName] = useState(p.displayName || p.username || "");
+  const [displayName, setDisplayName] = useState(p.displayName || (user?.email ? user.email.split('@')[0] : ""));
   const [avatar, setAvatar] = useState(p.avatar);
   const [cls, setCls] = useState<string>("");
 
@@ -26,17 +28,7 @@ export default function Character() {
     e.preventDefault();
     const trimmedDisplayName = displayName.trim();
     
-    // Generate a unique username from display name
-    let username = trimmedDisplayName.toLowerCase().replace(/[^a-z0-9]/g, '_');
-    let counter = 1;
-    while (!playerStore.isUsernameUnique(username)) {
-      username = `${trimmedDisplayName.toLowerCase().replace(/[^a-z0-9]/g, '_')}${counter}`;
-      counter++;
-    }
-
-    playerStore.createUser(username);
     playerStore.set({ 
-      username, 
       displayName: trimmedDisplayName, 
       avatar, 
       charClass: cls, 

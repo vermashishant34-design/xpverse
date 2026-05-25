@@ -46,7 +46,7 @@ export function AppShell() {
             <Link to="/profile" className="flex items-center gap-3 rounded-full glass px-3 py-1.5">
               <span className="grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br from-primary to-accent text-background font-bold text-sm">{p.avatar}</span>
               <div className="hidden sm:block">
-                <div className="text-xs font-mono">{p.displayName || p.username} · {p.charClass}</div>
+                <div className="text-xs font-mono">{p.displayName} · {p.charClass}</div>
                 <div className="text-[10px] text-muted-foreground font-mono">Lv {p.level} · {p.coins}¤</div>
               </div>
             </Link>

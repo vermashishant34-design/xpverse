@@ -8,13 +8,13 @@ export default function Profile() {
     <div className="space-y-10">
       <header>
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-neon-cyan">— Operator File</p>
-        <h1 className="mt-3 font-display text-5xl md:text-6xl font-bold tracking-tighter">{p.username}</h1>
+        <h1 className="mt-3 font-display text-5xl md:text-6xl font-bold tracking-tighter">{p.displayName}</h1>
       </header>
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="rounded-2xl glass p-8 text-center">
           <div className="mx-auto grid h-32 w-32 place-items-center rounded-full bg-gradient-to-br from-neon-blue to-neon-purple text-5xl font-bold animate-pulse-glow">{p.avatar}</div>
-          <div className="mt-6 font-display text-2xl">{p.username}</div>
+          <div className="mt-6 font-display text-2xl">{p.displayName}</div>
           <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Lv {p.level} · {p.charClass}</div>
         </div>
         <div className="rounded-2xl glass p-8 space-y-4">

@@ -6,8 +6,8 @@ interface AuthState {
   user: any | null;
   loading: boolean;
   error: string | null;
-  signup: (username: string, email?: string, password?: string) => Promise<void>;
-  login: (username: string, password?: string) => Promise<void>;
+  signup: (email: string, password?: string) => Promise<void>;
+  login: (email: string, password?: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
 }
@@ -31,13 +31,13 @@ export const useAuth = create<AuthState>((set, get) => {
     loading: false,
     error: null,
 
-    signup: async (username: string, email?: string, password?: string) => {
+    signup: async (email: string, password?: string) => {
       set({ loading: true, error: null });
       try {
-        playerStore.createUser(username);
-        playerStore.set({ username, created: true });
+        playerStore.createUser(email);
+        playerStore.set({ created: true });
         
-        const userData = { username, email };
+        const userData = { email };
         localStorage.setItem(AUTH_KEY, JSON.stringify({ user: userData }));
         
         set({
@@ -50,17 +50,17 @@ export const useAuth = create<AuthState>((set, get) => {
       }
     },
 
-    login: async (username: string, password?: string) => {
+    login: async (email: string, password?: string) => {
       set({ loading: true, error: null });
       try {
-        if (!playerStore.isUsernameUnique(username)) {
-          playerStore.switchUser(username);
+        if (!playerStore.isEmailUnique(email)) {
+          playerStore.switchUser(email);
         } else {
-          playerStore.createUser(username);
-          playerStore.set({ username, created: true });
+          playerStore.createUser(email);
+          playerStore.set({ created: true });
         }
         
-        const userData = { username };
+        const userData = { email };
         localStorage.setItem(AUTH_KEY, JSON.stringify({ user: userData }));
         
         set({

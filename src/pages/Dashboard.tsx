@@ -17,7 +17,7 @@ export default function Dashboard() {
       <header>
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-neon-cyan">— Operator HUD</p>
         <h1 className="mt-3 font-display text-5xl md:text-7xl font-bold tracking-tighter">
-          Welcome back, <span className="gradient-text">{p.username}.</span>
+          Welcome back, <span className="gradient-text">{p.displayName}.</span>
         </h1>
       </header>
 

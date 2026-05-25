@@ -7,7 +7,7 @@ export type ScreenTimeEntry = { id: string; app: string; minutes: number; produc
 export type NotificationItem = { id: string; text: string; tone: "xp" | "level" | "quest" | "skill" | "info"; at: number };
 
 export type Player = {
-  username: string;
+  email: string;
   displayName: string;
   avatar: string;
   charClass: string;
@@ -31,9 +31,9 @@ const CURRENT_USER_KEY = "xpverse:currentUser:v1";
 
 const todayKey = () => new Date().toISOString().slice(0, 10);
 
-const createInitialPlayer = (username: string): Player => ({
-  username,
-  displayName: username,
+const createInitialPlayer = (email: string): Player => ({
+  email,
+  displayName: email.split('@')[0],
   avatar: "◉",
   charClass: "Hacker",
   level: 1,
@@ -66,10 +66,10 @@ const createInitialPlayer = (username: string): Player => ({
   created: false,
 });
 
-const initial: Player = createInitialPlayer("Wanderer");
+const initial: Player = createInitialPlayer("wanderer@example.com");
 
 interface UserData {
-  [username: string]: Player;
+  [email: string]: Player;
 }
 
 let users: UserData = (() => {
@@ -77,21 +77,11 @@ let users: UserData = (() => {
   try {
     const raw = localStorage.getItem(USERS_KEY);
     const loadedUsers: UserData = raw ? JSON.parse(raw) : {};
-    // Migrate existing users to add displayName
-    Object.keys(loadedUsers).forEach((username) => {
-      if (!loadedUsers[username].displayName) {
-        loadedUsers[username].displayName = username;
-      }
-    });
-    // Save migrated users back to localStorage
-    if (raw) {
-      localStorage.setItem(USERS_KEY, JSON.stringify(loadedUsers));
-    }
     return loadedUsers;
   } catch { return {}; }
 })();
 
-let currentUsername: string | null = (() => {
+let currentEmail: string | null = (() => {
   if (typeof window === "undefined") return null;
   try {
     return localStorage.getItem(CURRENT_USER_KEY);
@@ -100,11 +90,11 @@ let currentUsername: string | null = (() => {
 
 let state: Player = (() => {
   if (typeof window === "undefined") return initial;
-  if (currentUsername && users[currentUsername]) {
-    const user = users[currentUsername];
+  if (currentEmail && users[currentEmail]) {
+    const user = users[currentEmail];
     // Ensure displayName exists
     if (!user.displayName) {
-      user.displayName = user.username;
+      user.displayName = user.email.split('@')[0];
     }
     return user;
   }
@@ -120,14 +110,14 @@ const saveUsers = () => {
 };
 
 const saveCurrentUser = () => {
-  if (typeof window !== "undefined" && currentUsername) {
-    localStorage.setItem(CURRENT_USER_KEY, currentUsername);
+  if (typeof window !== "undefined" && currentEmail) {
+    localStorage.setItem(CURRENT_USER_KEY, currentEmail);
   }
 };
 
 const emit = () => {
-  if (currentUsername) {
-    users[currentUsername] = state;
+  if (currentEmail) {
+    users[currentEmail] = state;
     saveUsers();
   }
   listeners.forEach(l => l());
@@ -150,37 +140,37 @@ export const playerStore = {
   subscribe(l: () => void) { listeners.add(l); return () => listeners.delete(l); },
   get() { return state; },
   set(p: Partial<Player>) { state = { ...state, ...p }; emit(); },
-  isUsernameUnique(username: string): boolean {
-    return !users[username.trim()];
+  isEmailUnique(email: string): boolean {
+    return !users[email.trim().toLowerCase()];
   },
-  getAllUsernames(): string[] {
+  getAllEmails(): string[] {
     return Object.keys(users);
   },
-  getUser(username: string): Player | undefined {
-    return users[username.trim()];
+  getUser(email: string): Player | undefined {
+    return users[email.trim().toLowerCase()];
   },
-  switchUser(username: string): boolean {
-    const trimmedUsername = username.trim();
-    if (!users[trimmedUsername]) return false;
-    currentUsername = trimmedUsername;
-    state = users[trimmedUsername];
+  switchUser(email: string): boolean {
+    const trimmedEmail = email.trim().toLowerCase();
+    if (!users[trimmedEmail]) return false;
+    currentEmail = trimmedEmail;
+    state = users[trimmedEmail];
     saveCurrentUser();
     emit();
     return true;
   },
-  createUser(username: string): boolean {
-    const trimmedUsername = username.trim();
-    if (users[trimmedUsername]) return false;
-    currentUsername = trimmedUsername;
-    state = createInitialPlayer(trimmedUsername);
-    users[trimmedUsername] = state;
+  createUser(email: string): boolean {
+    const trimmedEmail = email.trim().toLowerCase();
+    if (users[trimmedEmail]) return false;
+    currentEmail = trimmedEmail;
+    state = createInitialPlayer(trimmedEmail);
+    users[trimmedEmail] = state;
     saveUsers();
     saveCurrentUser();
     emit();
     return true;
   },
   logout() {
-    currentUsername = null;
+    currentEmail = null;
     state = initial;
     if (typeof window !== "undefined") {
       localStorage.removeItem(CURRENT_USER_KEY);
@@ -237,10 +227,10 @@ export const playerStore = {
   },
   clearNotifications() { state = { ...state, notifications: [] }; emit(); },
   reset() {
-    if (currentUsername) {
-      state = createInitialPlayer(currentUsername);
+    if (currentEmail) {
+      state = createInitialPlayer(currentEmail);
       state.created = true;
-      users[currentUsername] = state;
+      users[currentEmail] = state;
       saveUsers();
       emit();
     }

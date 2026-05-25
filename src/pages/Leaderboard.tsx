@@ -14,7 +14,7 @@ const FAKE = [
 type Row = { name: string; lv: number; xp: number; cls: string; isMe?: boolean };
 export default function Leaderboard() {
   const p = usePlayer();
-  const me: Row = { name: p.username, lv: p.level, xp: p.xp + p.level * 200, cls: p.charClass, isMe: true };
+  const me: Row = { name: p.displayName, lv: p.level, xp: p.xp + p.level * 200, cls: p.charClass, isMe: true };
   const all: Row[] = [...FAKE, me].sort((a, b) => b.xp - a.xp);
   const top3 = all.slice(0, 3);
   const rest = all.slice(3);

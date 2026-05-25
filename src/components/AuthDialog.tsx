@@ -16,8 +16,8 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
   const { signup, login, loading, error, isAuthenticated, clearError } = useAuth();
   const nav = useNavigate();
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
-  const [signupData, setSignupData] = useState({ username: "", password: "", confirmPassword: "" });
-  const [loginData, setLoginData] = useState({ username: "", password: "" });
+  const [signupData, setSignupData] = useState({ email: "", password: "", confirmPassword: "" });
+  const [loginData, setLoginData] = useState({ email: "", password: "" });
 
   useEffect(() => {
     if (isAuthenticated && open) {
@@ -35,12 +35,12 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
     if (signupData.password !== signupData.confirmPassword) {
       return;
     }
-    await signup(signupData.username, undefined, signupData.password || undefined);
+    await signup(signupData.email, signupData.password || undefined);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(loginData.username, loginData.password || undefined);
+    await login(loginData.email, loginData.password || undefined);
   };
 
   return (
@@ -91,12 +91,13 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
             <div className="mt-4">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-username" className="text-neon-cyan">Username</Label>
+                  <Label htmlFor="login-email" className="text-neon-cyan">Email</Label>
                   <Input
-                    id="login-username"
-                    placeholder="Enter your username"
-                    value={loginData.username}
-                    onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
+                    id="login-email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={loginData.email}
+                    onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                     required
                     className="border-white/20 focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan/50 bg-background/50"
                   />
@@ -128,12 +129,13 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
             <div className="mt-4">
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-username" className="text-neon-purple">Username</Label>
+                  <Label htmlFor="signup-email" className="text-neon-purple">Email</Label>
                   <Input
-                    id="signup-username"
-                    placeholder="Choose a unique username"
-                    value={signupData.username}
-                    onChange={(e) => setSignupData({ ...signupData, username: e.target.value })}
+                    id="signup-email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={signupData.email}
+                    onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
                     required
                     className="border-white/20 focus:border-neon-purple focus:ring-1 focus:ring-neon-purple/50 bg-background/50"
                   />
